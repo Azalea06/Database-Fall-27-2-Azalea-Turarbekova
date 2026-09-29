@@ -1,0 +1,13 @@
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# CREATE DATABASE university;
+CREATE DATABASE
+postgres=# \c university
+You are now connected to database "university" as user "azaliaturarbekova".
+university=# \c postgres
+You are now connected to database "postgres" as user "azaliaturarbekova".
+postgres=# DROP DATABASE university;
+DROP DATABASE
+(base) azaliaturarbekova@MacB(base) azaliaturarbekova@MacB(base) azaliaturarbekova@MacBook-Air-Azalia ~ % 
