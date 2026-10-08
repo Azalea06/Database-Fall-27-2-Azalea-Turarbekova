@@ -1,0 +1,134 @@
+Last login: Fri Oct  9 01:12:01 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# SELECT * FROM employees;
+ emp_id | first_name | last_name |       position       |  salary  | hire_date  | dept_id 
+--------+------------+-----------+----------------------+----------+------------+---------
+      1 | John       | Smith     | Software Engineer    | 75000.00 | 2026-10-07 |       1
+      2 | Jane       | Doe       | Senior Developer     | 85000.00 | 2026-10-07 |       1
+      3 | Mike       | Brown     | DevOps Engineer      | 80000.00 | 2026-10-07 |       1
+      4 | Sarah      | Davis     | Marketing Specialist | 55000.00 | 2026-10-07 |       2
+(4 rows)
+
+postgres=# SELECT first_name, position FROM employees;
+ first_name |       position       
+------------+----------------------
+ John       | Software Engineer
+ Jane       | Senior Developer
+ Mike       | DevOps Engineer
+ Sarah      | Marketing Specialist
+(4 rows)
+
+postgres=# SELECT first_name, salary, salary * 0.10 AS potential_bonus 
+postgres-# FROM employees;
+ first_name |  salary  | potential_bonus 
+------------+----------+-----------------
+ John       | 75000.00 |       7500.0000
+ Jane       | 85000.00 |       8500.0000
+ Mike       | 80000.00 |       8000.0000
+ Sarah      | 55000.00 |       5500.0000
+(4 rows)
+
+postgres=# SELECT first_name, salary
+postgres-# FROM employees
+postgres-# WHERE position = 'Senior Developer';
+ first_name |  salary  
+------------+----------
+ Jane       | 85000.00
+(1 row)
+
+postgres=# SELECT last_name 
+postgres-# FROM employees
+postgres-# WHERE salary > 55000 AND position = 'Software Engineer';
+ last_name 
+-----------
+ Smith
+(1 row)
+
+postgres=# SELECT hire_date, salary
+postgres-# FROM employees
+postgres-# WHERE dept_id BETWEEN 0 AND 2;
+ hire_date  |  salary  
+------------+----------
+ 2026-10-07 | 75000.00
+ 2026-10-07 | 85000.00
+ 2026-10-07 | 80000.00
+ 2026-10-07 | 55000.00
+(4 rows)
+
+postgres=# SELECT first_name
+postgres-# FROM employees
+postgres-# WHERE first_name LIKE 'J%';
+ first_name 
+------------
+ John
+ Jane
+(2 rows)
+
+postgres=# SELECT position
+postgres-# FROM employees
+postgres-# WHERE position LIKE '%er';
+     position      
+-------------------
+ Software Engineer
+ Senior Developer
+ DevOps Engineer
+(3 rows)
+
+postgres=# SELECT first_name
+postgres-# FROM employees
+postgres-# WHERE first_name ~ '^[MS]';
+ first_name 
+------------
+ Mike
+ Sarah
+(2 rows)
+
+postgres=# SELECT last_name, position
+postgres-# FROM employees
+postgres-# WHERE dept_id IN (1, 2);
+ last_name |       position       
+-----------+----------------------
+ Smith     | Software Engineer
+ Doe       | Senior Developer
+ Brown     | DevOps Engineer
+ Davis     | Marketing Specialist
+(4 rows)
+
+postgres=# SELECT first_name, salary,
+postgres-# CASE
+postgres-# WHEN salary > 50000 THEN 'Mid'
+postgres-# ELSE 'Junior'
+postgres-# END AS employee_level
+postgres-# FROM employees;
+ first_name |  salary  | employee_level 
+------------+----------+----------------
+ John       | 75000.00 | Mid
+ Jane       | 85000.00 | Mid
+ Mike       | 80000.00 | Mid
+ Sarah      | 55000.00 | Mid
+(4 rows)
+
+postgres=# WITH position_averages AS (
+postgres(# SELECT
+postgres(# position,
+postgres(# AVG(salary) AS avg_salary
+postgres(# FROM employees
+postgres(# GROUP BY position
+postgres(# )
+postgres-# SELECT
+postgres-# e.first_name,
+postgres-# e.salary,
+postgres-# e.position,
+postgres-# da.avg_salary
+postgres-# FROM employees e
+postgres-# JOIN position_averages da ON e.position = da.position
+postgres-# WHERE e.salary > da.avg_salary;
+ first_name | salary | position | avg_salary 
+------------+--------+----------+------------
+(0 rows)
+
+postgres=# \q
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % 
