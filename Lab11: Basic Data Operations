@@ -1,0 +1,69 @@
+Last login: Thu Oct  8 17:20:56 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# CREATE TABLE students3 (
+postgres(# student_id SERIAL PRIMARY KEY,
+postgres(# first_name VARCHAR(50),
+postgres(# last_name VARCHAR(50),
+postgres(# birth_date DATE
+postgres(# );
+CREATE TABLE
+postgres=# INSERT INTO students3 (first_name, last_name, birth_date)
+postgres-# VALUES ('Aibek', 'Sharshenov', '2002-05-12');
+INSERT 0 1
+postgres=# INSERT INTO students3 (first_name, last_name, birth_date) VALUES
+postgres-# ('Ainura', 'Toktomamatova', '2001-09-23'),
+postgres-# ('Bakyt', 'Mamatov', '2003-01-15'),
+postgres-# ('Gulzat', 'Sultanova', '2002-07-30');
+INSERT 0 3
+postgres=# UPDATE students3
+postgres-# SET birth_date = '2002-05-15'
+postgres-# WHERE first_name = 'Aibek' AND last_name = 'Sharshenov';
+UPDATE 1
+postgres=# DELETE FROM students3
+postgres-# WHERE birth_date < '2002-01-01';
+DELETE 1
+postgres=# \copy students3(first_name, last_name, birth_date) FROM '/Users/azaliaturarbekova/Downloads/students3.csv' DELIMITER ',' CSV HEADER;
+COPY 3
+postgres=# SELECT * FROM students3;
+ student_id | first_name |  last_name  | birth_date 
+------------+------------+-------------+------------
+          3 | Bakyt      | Mamatov     | 2003-01-15
+          4 | Gulzat     | Sultanova   | 2002-07-30
+          1 | Aibek      | Sharshenov  | 2002-05-15
+          5 | Azalea     | Turarbekova | 2006-03-02
+          6 | Medina     | Muratova    | 2007-04-26
+          7 | Aktan      | Muratov     | 2006-11-14
+(6 rows)
+
+postgres=# UPDATE students3
+postgres-# SET last_name = 'Bekov'
+postgres-# WHERE last_name IN ('Uulu', 'Isakov');
+UPDATE 0
+postgres=# DELETE FROM students3
+postgres-# WHERE student_id IN (1, 2, 4);
+DELETE 2
+postgres=# SELECT * FROM students3;
+ student_id | first_name |  last_name  | birth_date 
+------------+------------+-------------+------------
+          3 | Bakyt      | Mamatov     | 2003-01-15
+          5 | Azalea     | Turarbekova | 2006-03-02
+          6 | Medina     | Muratova    | 2007-04-26
+          7 | Aktan      | Muratov     | 2006-11-14
+(4 rows)
+
+postgres=# DELETE FROM students3
+postgres-# WHERE student_id IN (3);
+DELETE 1
+postgres=# SELECT * FROM students3;
+ student_id | first_name |  last_name  | birth_date 
+------------+------------+-------------+------------
+          5 | Azalea     | Turarbekova | 2006-03-02
+          6 | Medina     | Muratova    | 2007-04-26
+          7 | Aktan      | Muratov     | 2006-11-14
+(3 rows)
+
+postgres=# \q
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % 
