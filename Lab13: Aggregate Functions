@@ -1,0 +1,298 @@
+Last login: Tue Oct 20 11:26:38 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# SELECT COUNT(*) AS total_employees
+postgres-# FROM employees;
+ total_employees 
+-----------------
+               4
+(1 row)
+
+postgres=# SELECT COUNT(email) AS employees_with_email
+postgres-# FROM employees;
+ employees_with_email 
+----------------------
+                    4
+(1 row)
+
+postgres=# SELECT COUNT(DISTINCT position) AS unique_position
+postgres-# FROM employees;
+ unique_position 
+-----------------
+               4
+(1 row)
+
+postgres=# SELECT SUM(salary) AS total_salaries
+postgres-# FROM employees;
+ total_salaries 
+----------------
+      295000.00
+(1 row)
+
+postgres=# SELECT department, SUM(sales_amount) AS total_sales
+postgres-# FROM sales_data
+postgres-# GROUP BY department;
+ department | total_sales 
+------------+-------------
+ Marketing  |    28000.00
+ Finance    |    43000.00
+ Sales      |    72000.00
+ IT         |    37000.00
+ HR         |    17500.00
+(5 rows)
+
+postgres=# SELECT AVG(salary) AS average_salary
+postgres-# FROM employees;
+   average_salary   
+--------------------
+ 73750.000000000000
+(1 row)
+
+postgres=# SELECT position, AVG(age) AS avg_age
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       |       avg_age       
+----------------------+---------------------
+ Software Engineer    | 20.0000000000000000
+ Marketing Specialist | 26.0000000000000000
+ Senior Developer     | 23.0000000000000000
+ DevOps Engineer      | 22.0000000000000000
+(4 rows)
+
+postgres=# SELECT MAX(salary) AS highest_salary, MIN(salary) AS lowest_salary FROM employees;
+ highest_salary | lowest_salary 
+----------------+---------------
+       85000.00 |      55000.00
+(1 row)
+
+postgres=# SELECT position, MAX(hire_date) AS latest_hire
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | latest_hire 
+----------------------+-------------
+ Software Engineer    | 2026-10-07
+ Marketing Specialist | 2026-10-07
+ Senior Developer     | 2026-10-07
+ DevOps Engineer      | 2026-10-07
+(4 rows)
+
+postgres=# SELECT position, STRING_AGG(first_name, ',') AS employees_names
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | employees_names 
+----------------------+-----------------
+ Software Engineer    | John
+ Marketing Specialist | Sarah
+ Senior Developer     | Jane
+ DevOps Engineer      | Mike
+(4 rows)
+
+postgres=# SELECT employee_id, STRING_AGG(skill_name, ',' ORDER BY skill_name) AS skills
+postgres-# FROM employee_skills
+postgres-# GROUP BY employee_id;
+ employee_id |           skills           
+-------------+----------------------------
+           1 | Database Design,Python,SQL
+           2 | Java,SQL
+           3 | Linux,Vibe Coding
+           4 | Communication,Marketing
+(4 rows)
+
+postgres=# SELECT position, ARRAY_AGG(salary) AS salary_array
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | salary_array 
+----------------------+--------------
+ Software Engineer    | {75000.00}
+ Marketing Specialist | {55000.00}
+ Senior Developer     | {85000.00}
+ DevOps Engineer      | {80000.00}
+(4 rows)
+
+postgres=# SELECT position, ARRAY_AGG(first_name ORDER BY last_name) AS employees
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | employees 
+----------------------+-----------
+ DevOps Engineer      | {Mike}
+ Marketing Specialist | {Sarah}
+ Senior Developer     | {Jane}
+ Software Engineer    | {John}
+(4 rows)
+
+postgres=# SELECT position, 
+postgres-# STDDEV(salary) AS salary_std_dev,
+postgres-# VARIANCE(salary) AS salary_variance
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | salary_std_dev | salary_variance 
+----------------------+----------------+-----------------
+ Software Engineer    |                |                
+ Marketing Specialist |                |                
+ Senior Developer     |                |                
+ DevOps Engineer      |                |                
+(4 rows)
+
+postgres=# SELECT CORR(experience_years, salary) AS experience_salary_correlation
+postgres-# FROM employees;
+ experience_salary_correlation 
+-------------------------------
+           -0.5399687630411975
+(1 row)
+
+postgres=# SELECT category, 
+postgres-# COUNT(*) AS number_of_products,
+postgres-# SUM(price) AS total_value,
+postgres-# AVG(price) AS average_price
+postgres-# FROM products
+postgres-# GROUP BY category;
+  category   | number_of_products | total_value |    average_price     
+-------------+--------------------+-------------+----------------------
+ Furniture   |                  3 |      880.00 | 293.3333333333333333
+ Electronics |                  4 |     2500.00 | 625.0000000000000000
+ Stationery  |                  2 |       17.00 |   8.5000000000000000
+(3 rows)
+
+postgres=# SELECT EXTRACT(YEAR FROM sale_date) AS year,
+postgres-# EXTRACT(QUARTER FROM sale_date) AS quarter,
+postgres-# COUNT(*) AS total_sales,
+postgres-# SUM(amount) AS total_revenue
+postgres-# FROM sales
+postgres-# GROUP BY EXTRACT(YEAR FROM sale_date), EXTRACT(QUARTER FROM sale_date)
+postgres-# ORDER BY year, quarter;
+ year | quarter | total_sales | total_revenue 
+------+---------+-------------+---------------
+(0 rows)
+
+postgres=# SELECT CASE
+postgres-# WHEN age < 30 THEN 'Under 30'
+postgres-# WHEN age BETWEEN 30 and 50 THEN '30-50'
+postgres-# ELSE 'Over 50'
+postgres-# END AS age_group,
+postgres-# COUNT(*) AS employee_count,
+postgres-# AVG(salary) AS avg_salary
+postgres-# FROM employees
+postgres-# GROUP BY
+postgres-# CASE WHEN age < 30 THEN 'Under 30'
+postgres-# WHEN age BETWEEN 30 AND 50 THEN '30-50'
+postgres-# ELSE 'Over 50'
+postgres-# END;
+ age_group | employee_count |     avg_salary     
+-----------+----------------+--------------------
+ Under 30  |              4 | 73750.000000000000
+(1 row)
+
+postgres=# SELECT position,
+postgres-# COUNT(*) AS employee_count
+postgres-# FROM employees
+postgres-# GROUP BY position
+postgres-# HAVING COUNT(*) > 5;
+ position | employee_count 
+----------+----------------
+(0 rows)
+
+postgres=# SELECT product_id,
+postgres-# AVG(rating) AS avg_rating, 
+postgres-# COUNT(*) AS review_count
+postgres-# FROM product_reviews
+postgres-# GROUP BY product_id
+postgres-# HAVING AVG(rating) > 4.0 AND COUNT(*) >= 10;
+ product_id | avg_rating | review_count 
+------------+------------+--------------
+(0 rows)
+
+postgres=# SELECT position, AVG(salary) AS dept_avg_salary
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       |  dept_avg_salary   
+----------------------+--------------------
+ Software Engineer    | 75000.000000000000
+ Marketing Specialist | 55000.000000000000
+ Senior Developer     | 85000.000000000000
+ DevOps Engineer      | 80000.000000000000
+(4 rows)
+
+postgres=# SELECT
+postgres-# emp_id,
+postgres-# first_name,
+postgres-# position, 
+postgres-# salary,
+postgres-# AVG(salary) OVER (PARTITION BY position) AS dept_avg_salary
+postgres-# FROM employees;
+ emp_id | first_name |       position       |  salary  |  dept_avg_salary   
+--------+------------+----------------------+----------+--------------------
+      3 | Mike       | DevOps Engineer      | 80000.00 | 80000.000000000000
+      4 | Sarah      | Marketing Specialist | 55000.00 | 55000.000000000000
+      2 | Jane       | Senior Developer     | 85000.00 | 85000.000000000000
+      1 | John       | Software Engineer    | 75000.00 | 75000.000000000000
+(4 rows)
+
+postgres=# SELECT 
+postgres-# COUNT(*) AS total_rows,
+postgres-# COUNT(email) AS non_null_emails,
+postgres-# COUNT(*) - COUNT(email) AS null_emails
+postgres-# FROM employees;
+ total_rows | non_null_emails | null_emails 
+------------+-----------------+-------------
+          4 |               4 |           0
+(1 row)
+
+postgres=# SELECT
+postgres-# SUM(bonus) AS total_bonus,
+postgres-# AVG(bonus) AS avg_bonus,
+postgres-# COUNT(bonus) AS employees_with_bonus
+postgres-# FROM employees;
+ total_bonus |       avg_bonus       | employees_with_bonus 
+-------------+-----------------------+----------------------
+       22700 | 5675.0000000000000000 |                    4
+(1 row)
+
+postgres=# SELECT position,
+postgres-# COUNT(*) AS employee_count,
+postgres-# MIN(salary) AS min_salary,
+postgres-# MAX(salary) AS max_salary,
+postgres-# AVG(salary) AS avg_salary,
+postgres-# STDDEV(salary) AS salary_std_dev
+postgres-# FROM employees
+postgres-# GROUP BY position
+postgres-# ORDER BY avg_salary DESC;
+       position       | employee_count | min_salary | max_salary |     avg_salary     | salary_std_dev 
+----------------------+----------------+------------+------------+--------------------+----------------
+ Senior Developer     |              1 |   85000.00 |   85000.00 | 85000.000000000000 |               
+ DevOps Engineer      |              1 |   80000.00 |   80000.00 | 80000.000000000000 |               
+ Software Engineer    |              1 |   75000.00 |   75000.00 | 75000.000000000000 |               
+ Marketing Specialist |              1 |   55000.00 |   55000.00 | 55000.000000000000 |               
+(4 rows)
+
+postgres=# SELECT position,
+postgres-# COUNT(*) AS total_employees,
+postgres-# COUNT(CASE WHEN salary > 50000 THEN 1 END) AS high_earners,
+postgres-# COUNT(CASE WHEN hire_date > '2023-01-01' THEN 1 END) AS recent_hires
+postgres-# FROM employees
+postgres-# GROUP BY position;
+       position       | total_employees | high_earners | recent_hires 
+----------------------+-----------------+--------------+--------------
+ Software Engineer    |               1 |            1 |            1
+ Marketing Specialist |               1 |            1 |            1
+ Senior Developer     |               1 |            1 |            1
+ DevOps Engineer      |               1 |            1 |            1
+(4 rows)
+
+postgres=# SELECT position,
+postgres-# COUNT(*) AS dept_count,
+postgres-# COUNT(*)::FLOAT / (SELECT COUNT(*) FROM employees) * 100 AS
+postgres-# percentage
+postgres-# FROM employees
+postgres-# GROUP BY position
+postgres-# ORDER BY percentage DESC;
+       position       | dept_count | percentage 
+----------------------+------------+------------
+ Software Engineer    |          1 |         25
+ Marketing Specialist |          1 |         25
+ Senior Developer     |          1 |         25
+ DevOps Engineer      |          1 |         25
+(4 rows)
+
+postgres=# 
