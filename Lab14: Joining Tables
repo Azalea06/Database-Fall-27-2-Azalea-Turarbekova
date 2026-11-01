@@ -1,0 +1,166 @@
+Last login: Thu Oct 22 10:52:54 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# CREATE TABLE customers(
+postgres(# customer_id SERIAL PRIMARY KEY,
+postgres(# name VARCHAR(100),
+postgres(# email VARCHAR(100)
+postgres(# );
+CREATE TABLE
+postgres=# CREATE TABLE orders (
+postgres(# order_id SERIAL PRIMARY KEY,
+postgres(# customer_id INTEGER REFERENCES customers(customer_id),
+postgres(# order_date DATE,
+postgres(# total_amount DECIMAL(10,2)
+postgres(# );
+CREATE TABLE
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount 
+------+-------+------------+--------------
+(0 rows)
+
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount 
+------+-------+------------+--------------
+(0 rows)
+
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# RIGHT JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount 
+------+-------+------------+--------------
+(0 rows)
+
+postgres=# SELECT c.name, c.email, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# FULL OUTER JOIN orders o ON c.customer_id = o.customer_id;
+ name | email | order_date | total_amount 
+------+-------+------------+--------------
+(0 rows)
+
+postgres=# SELECT c.name, p.product_name
+postgres-# FROM customers c
+postgres-# CROSS JOIN products p;
+ name | product_name 
+------+--------------
+(0 rows)
+
+postgres=# SELECT c.name, o.order_date, oi.quantity, p.product_name, p.price
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id
+postgres-# INNER JOIN order_items oi ON o.order_id = oi.order_id
+postgres-# INNER JOIN products p ON oi.product_id = p.product_id;
+ name | order_date | quantity | product_name | price 
+------+------------+----------+--------------+-------
+(0 rows)
+
+postgres=# ALTER TABLE employees
+postgres-# ADD COLUMN manager_id INTEGER REFERENCES employees(emp_id);
+ALTER TABLE
+postgres=# SELECT emp_id, first_name, last_name, position
+postgres-# FROM employees;
+ emp_id | first_name | last_name |       position       
+--------+------------+-----------+----------------------
+      1 | John       | Smith     | Software Engineer
+      2 | Jane       | Doe       | Senior Developer
+      3 | Mike       | Brown     | DevOps Engineer
+      4 | Sarah      | Davis     | Marketing Specialist
+(4 rows)
+
+postgres=# SELECT e1.first_name AS employee, e2.first_name AS manager
+postgres-# FROM employees e1
+postgres-# LEFT JOIN employees e2 ON e1.manager_id = e2.emp_id;
+ employee | manager 
+----------+---------
+ John     | 
+ Jane     | John
+ Mike     | John
+ Sarah    | Jane
+(4 rows)
+
+postgres=# SELECT c.name, o.order_date, o.total_amount
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.order_date >= '2024-01-01'
+postgres-# AND o.total_amount > 100;
+ name | order_date | total_amount 
+------+------------+--------------
+(0 rows)
+
+postgres=# ALTER TABLE user_profiles
+postgres-# ADD COLUMN phone VARCHAR(20);
+ALTER TABLE
+postgres=# SELECT u.username, up.first_name, up.last_name, up.phone
+postgres-# FROM users u
+postgres-# LEFT JOIN user_profiles up ON u.user_id = up.user_id;
+ username | first_name | last_name | phone 
+----------+------------+-----------+-------
+ johndoe  | John       | Doe       | 
+(1 row)
+
+postgres=# SELECT a.first_name || ' ' || a.last_name AS author_name,
+postgres-# b.title, b.publication_year
+postgres-# FROM authors a
+postgres-# INNER JOIN books b
+postgres-# ON a.author_id = b.author_id
+postgres-# ORDER BY author_name, b.publication_year;
+  author_name  |      title       | publication_year 
+---------------+------------------+------------------
+ Jane Doe      | Database Design  |             2024
+ John Smith    | SQL Basics       |             2022
+ John Smith    | PostgreSQL Guide |             2023
+ Michael Brown | Learning SQL     |             2025
+(4 rows)
+
+postgres=# SELECT s.first_name || ' ' || s.last_name AS student_name,
+postgres-# c.course_name, s.enrollemnt_date, e.grade
+postgres-# FROM students s
+postgres-# INNER JOIN enrollments e ON s.student_id = e.student_id
+postgres-# INNER JOIN courses c ON e.course_id = c.course_id
+postgres-# WHERE e.grade IS NOT NULL
+postgres-# ORDER BY student_name, c.course_name;
+ student_name | course_name | enrollemnt_date | grade 
+--------------+-------------+-----------------+-------
+(0 rows)
+
+postgres=# CREATE INDEX idx_orders_customer_id ON orders(customer_id);
+CREATE INDEX
+postgres=# CREATE INDEX idx_order_items_order_id ON order_items(order_id);
+CREATE INDEX
+postgres=# CREATE INDEX idx_order_items_product_id ON order_items(product_id);
+CREATE INDEX
+postgres=# SELECT c.name, o.order_date
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+ name | order_date 
+------+------------
+(0 rows)
+
+postgres=# SELECT c.name, o.order_date 
+postgres-# FROM customers c
+postgres-# INNER JOIN orders o ON c.customer_id = o.customer_id;
+ name | order_date 
+------+------------
+(0 rows)
+
+postgres=# SELECT c.name
+postgres-# FROM customers c
+postgres-# LEFT JOIN orders o ON c.customer_id = o.customer_id
+postgres-# WHERE o.customer_id IS NULL;
+  name   
+---------
+ Declan
+ Damian
+ Tiffany
+ Declan
+ Damian
+ Tiffany
+(6 rows)
+
+postgres=# 
