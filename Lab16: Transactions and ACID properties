@@ -1,0 +1,233 @@
+Last login: Mon Nov  2 16:34:50 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# BEGIN;
+BEGIN
+postgres=*# UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+UPDATE 1
+postgres=*# UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+UPDATE 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# SELECT balance FROM accounts WHERE account_id = 1;
+ balance 
+---------
+  900.00
+(1 row)
+
+postgres=*# UPDATE accounts SET balance = balance - 500 WHERE account_id = 1;
+UPDATE 1
+postgres=*# UPDATE accounts SET balance = balance + 500 WHERE account_id = 2;
+UPDATE 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (4, 250.00);
+INSERT 0 1
+postgres=*# INSERT INTO order_items (order_id, product_id, quantity) VALUES (17, 101, 2);
+INSERT 0 1
+postgres=*# UPDATE inventory SET stock = stock - 2 WHERE product_id = 101;
+UPDATE 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO customers (name, email) VALUES ('John Doe', 'john@email.com');
+INSERT 0 1
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (LASTVAL(), 100.00);
+ERROR:  insert or update on table "orders" violates foreign key constraint "orders_customer_id_fkey"
+DETAIL:  Key (customer_id)=(30) is not present in table "customers".
+postgres=!# ROLLBACK;
+ROLLBACK
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO customers (name, email) VALUES ('John Doe', 'john@email.com');
+INSERT 0 1
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (CURRVAL('customers_customer_id_seq'), 100.00);
+INSERT 0 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+BEGIN
+postgres=*# SELECT * FROM accounts;
+ account_id | balance 
+------------+---------
+          1 |  400.00
+          2 | 1100.00
+(2 rows)
+
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN
+postgres=*# SELECT * FROM accounts WHERE balance > 1000;
+ account_id | balance 
+------------+---------
+          2 | 1100.00
+(1 row)
+
+postgres=*# SELECT * FROM accounts WHERE balance > 1000;
+ account_id | balance 
+------------+---------
+          2 | 1100.00
+(1 row)
+
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN
+postgres=*# SELECT * FROM accounts WHERE balance > 1000;
+ account_id | balance 
+------------+---------
+          2 | 1100.00
+(1 row)
+
+postgres=*# SELECT * FROM accounts WHERE balance > 1000;
+ account_id | balance 
+------------+---------
+          2 | 1100.00
+(1 row)
+
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+postgres=*# SELECT * FROM accounts;
+ account_id | balance 
+------------+---------
+          1 |  400.00
+          2 | 1100.00
+(2 rows)
+
+postgres=*# UPDATE accounts SET balance = balance * 1.05;
+UPDATE 2
+postgres=*# COMMIT;
+COMMIT
+postgres=# SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+WARNING:  SET TRANSACTION can only be used in transaction blocks
+SET
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO customers (name, email) VALUES ('Alice', 'alice@email.com');
+INSERT 0 1
+postgres=*# SAVEPOINT after_customer_insert;
+SAVEPOINT
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (1, 500.00);
+ERROR:  insert or update on table "orders" violates foreign key constraint "orders_customer_id_fkey"
+DETAIL:  Key (customer_id)=(1) is not present in table "customers".
+postgres=!# ROLLBACK TO SAVEPOINT after_customer_insert;
+ROLLBACK
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (CURRVAL('customers_customer_id_seq'), 300.00);
+INSERT 0 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO products (product_name, price) VALUES ('Laptop', 999.99);
+INSERT 0 1
+postgres=*# SAVEPOINT sp1;
+SAVEPOINT
+postgres=*# INSERT INTO products (product_name, price) VALUES ('Mouse', 25.99);
+INSERT 0 1
+postgres=*# SAVEPOINT sp2;
+SAVEPOINT
+postgres=*# INSERT INTO products (product_name, price) VALUES ('Invalid Product', -50.00);
+INSERT 0 1
+postgres=*# ROLLBACK TO SAVEPOINT sp2;
+ROLLBACK
+postgres=*# INSERT INTO products (product_name, price) VALUES ('Keyboard', 79.99);
+INSERT 0 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO logs (message) VALUES ('Starting process');
+INSERT 0 1
+postgres=*# SAVEPOINT process_start;
+SAVEPOINT
+postgres=*# INSERT INTO logs (message) VALUES ('Process completed');
+INSERT 0 1
+postgres=*# RELEASE SAVEPOINT process_start;
+RELEASE
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# UPDATE inventory SET stock = stock - 1 WHERE product_id = 101;
+UPDATE 1
+postgres=*# INSERT INTO order_items (order_id, product_id, quantity) VALUES (31, 101, 1);
+INSERT 0 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# DO $$
+postgres$*# DECLARE
+postgres$*# current_balance DECIMAL;
+postgres$*# BEGIN
+postgres$*# SELECT balance INTO current_balance FROM accounts WHERE account_id = 1;
+postgres$*# IF current_balance < 100 THEN
+postgres$*# RAISE EXCEPTION 'Insufficient funds' USING ERRCODE = 'P0001';
+postgres$*# END IF;
+postgres$*# UPDATE accounts SET balance = balance - 100 WHERE account_id = 1;
+postgres$*# UPDATE accounts SET balance = balance + 100 WHERE account_id = 2;
+postgres$*# EXCEPTION
+postgres$*# WHEN SQLSTATE 'P0001' THEN
+postgres$*# RAISE NOTICE 'Transaction failed: Insufficient funds';
+postgres$*# ROLLBACK;
+postgres$*# END $$;
+DO
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN TRANSACTION ISOLATION LEVEL READ COMMITTED;
+BEGIN
+postgres=*# COMMIT;
+COMMIT
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO orders (customer_id, total) VALUES (23, 1000.00);
+INSERT 0 1
+postgres=*# SAVEPOINT before_items;
+SAVEPOINT
+postgres=*# INSERT INTO order_items (order_id, product_id, quantity) VALUES (currval('public.orders_order_id_seq'), 101, 2);
+INSERT 0 1
+postgres=# COMMIT;
+WARNING:  there is no transaction in progress
+COMMIT
+postgres=# SELECT
+postgres-# blocked_locks.pid AS blocked_pid,
+postgres-# blocked_activity.usename AS blocked_user,
+postgres-# blocking_locks.pid AS blocking_pid,
+postgres-# blocking_activity.usename AS blocking_user,
+postgres-# blocked_activity.query AS blocked_statement
+postgres-# FROM pg_catalog.pg_locks blocked_locks
+postgres-# JOIN pg_catalog.pg_stat_activity blocked_activity
+postgres-# ON blocked_activity.pid = blocked_locks.pid
+postgres-# JOIN pg_catalog.pg_locks blocking_locks
+postgres-# ON blocking_locks.locktype = blocked_locks.locktype
+postgres-# JOIN pg_catalog.pg_stat_activity blocking_activity
+postgres-# ON blocking_activity.pid = blocking_locks.pid
+postgres-# WHERE NOT blocked_locks.granted;
+ blocked_pid | blocked_user | blocking_pid | blocking_user | blocked_statement 
+-------------+--------------+--------------+---------------+-------------------
+(0 rows)
+
+postgres=# BEGIN;
+BEGIN
+postgres=*# INSERT INTO audit_log (action, timestamp) VALUES ('user_creation', NOW());
+INSERT 0 1
+postgres=*# INSERT INTO users (username, email) VALUES ('john_doe_transaction', 'john.transaction@example.com');
+INSERT 0 1
+postgres=*# INSERT INTO user_preferences (user_id, theme) VALUES (currval('public.users_user_id_seq'), 'dark');
+INSERT 0 1
+postgres=*# COMMIT;
+COMMIT
+postgres=# \q
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % 
