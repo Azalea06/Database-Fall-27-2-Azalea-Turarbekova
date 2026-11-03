@@ -1,0 +1,1005 @@
+Last login: Tue Nov  3 22:36:42 on ttys000
+(base) azaliaturarbekova@MacBook-Air-Azalia ~ % psql -d postgres
+psql (18.6 (Homebrew))
+Type "help" for help.
+
+postgres=# SET search_path TO lab, public;
+SET
+postgres=# COPY lab.employees TO '/tmp/employees.txt'
+postgres-# WITH DELIMITER '|' NULL 'N/A' CSV HEADER;
+COPY 12
+postgres=# COPY ( SELECT * FROM lab.employees WHERE department = 'IT' ) TO '/tmp/it_employees.csv' WITH CSV HEADER;
+COPY 3
+postgres=# COPY lab.products TO '/tmp/products.csv' WITH CSV HEADER;
+COPY 20
+postgres=# COPY lab.customers TO '/tmp/customers.csv' WITH (FORMAT CSV, HEADER, DELIMITER ';', QUOTE '"');
+COPY 0
+postgres=# COPY lab.orders TO '/tmp/orders.csv' WITH (FORMAT CSV, HEADER, FORCE_QUOTE (order_date));
+COPY 0
+postgres=# COPY lab.customer_feedback TO '/tmp/feedback.csv' WITH (FORMAT CSV, HEADER, DELIMITER ',', QUOTE '"', ESCAPE '"');
+COPY 0
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres > ~/backup.sql
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -Fc > ~/backup.dump
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -t lab.employees -t public.departments > ~/tables_backup.sql
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -Fc -v > ~/backup_verbose.dump
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: finding table check constraints
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "lab.customer_feedback"
+pg_dump: dumping contents of table "lab.customers"
+pg_dump: dumping contents of table "lab.employees"
+pg_dump: dumping contents of table "lab.orders"
+pg_dump: dumping contents of table "lab.products"
+pg_dump: dumping contents of table "public.accounts"
+pg_dump: dumping contents of table "public.audit_log"
+pg_dump: dumping contents of table "public.authors"
+pg_dump: dumping contents of table "public.blog_posts"
+pg_dump: dumping contents of table "public.book_authors"
+pg_dump: dumping contents of table "public.books"
+pg_dump: dumping contents of table "public.comments"
+pg_dump: dumping contents of table "public.course_enrollments"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.courses1"
+pg_dump: dumping contents of table "public.customers"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.departments1"
+pg_dump: dumping contents of table "public.departments2"
+pg_dump: dumping contents of table "public.employee_skills"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.employees1"
+pg_dump: dumping contents of table "public.enrollments"
+pg_dump: dumping contents of table "public.enrollments_bad"
+pg_dump: dumping contents of table "public.inventory"
+pg_dump: dumping contents of table "public.loans"
+pg_dump: dumping contents of table "public.logs"
+pg_dump: dumping contents of table "public.members"
+pg_dump: dumping contents of table "public.order_items"
+pg_dump: dumping contents of table "public.orders"
+pg_dump: dumping contents of table "public.pivoted_sales"
+pg_dump: dumping contents of table "public.product_reviews"
+pg_dump: dumping contents of table "public.products"
+pg_dump: dumping contents of table "public.products_test"
+pg_dump: dumping contents of table "public.sales"
+pg_dump: dumping contents of table "public.sales_data"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.student_phones"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.students1"
+pg_dump: dumping contents of table "public.students3"
+pg_dump: dumping contents of table "public.students61"
+pg_dump: dumping contents of table "public.students_bad"
+pg_dump: dumping contents of table "public.transactions"
+pg_dump: dumping contents of table "public.user_preferences"
+pg_dump: dumping contents of table "public.user_profiles"
+pg_dump: dumping contents of table "public.users"
+pg_dump: dumping contents of table "public.warehouse_1"
+pg_dump: dumping contents of table "public.warehouse_2"
+postgres=# \! pg_restore
+pg_restore: error: one of -d/--dbname and -f/--file must be specified
+postgres=# \! pg_restore --list ~/backup.dump
+;
+; Archive created at 2026-11-03 22:41:45 +06
+;     dbname: postgres
+;     TOC Entries: 304
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6 (Homebrew)
+;     Dumped by pg_dump version: 18.6 (Homebrew)
+;
+;
+; Selected TOC Entries:
+;
+8; 2615 17600 SCHEMA - lab azaliaturarbekova
+300; 1259 17619 TABLE lab customer_feedback azaliaturarbekova
+299; 1259 17618 SEQUENCE lab customer_feedback_feedback_id_seq azaliaturarbekova
+4336; 0 0 SEQUENCE OWNED BY lab customer_feedback_feedback_id_seq azaliaturarbekova
+278; 1259 17469 TABLE public customers azaliaturarbekova
+277; 1259 17468 SEQUENCE public customers_customer_id_seq azaliaturarbekova
+4337; 0 0 SEQUENCE OWNED BY public customers_customer_id_seq azaliaturarbekova
+301; 1259 17628 TABLE lab customers azaliaturarbekova
+297; 1259 17602 TABLE lab employees azaliaturarbekova
+296; 1259 17601 SEQUENCE lab employees_employee_id_seq azaliaturarbekova
+4338; 0 0 SEQUENCE OWNED BY lab employees_employee_id_seq azaliaturarbekova
+280; 1259 17477 TABLE public orders azaliaturarbekova
+279; 1259 17476 SEQUENCE public orders_order_id_seq azaliaturarbekova
+4339; 0 0 SEQUENCE OWNED BY public orders_order_id_seq azaliaturarbekova
+302; 1259 17635 TABLE lab orders azaliaturarbekova
+228; 1259 16540 TABLE public products azaliaturarbekova
+227; 1259 16539 SEQUENCE public products_product_id_seq azaliaturarbekova
+4340; 0 0 SEQUENCE OWNED BY public products_product_id_seq azaliaturarbekova
+298; 1259 17610 TABLE lab products azaliaturarbekova
+289; 1259 17550 TABLE public accounts azaliaturarbekova
+288; 1259 17549 SEQUENCE public accounts_account_id_seq azaliaturarbekova
+4341; 0 0 SEQUENCE OWNED BY public accounts_account_id_seq azaliaturarbekova
+294; 1259 17579 TABLE public audit_log azaliaturarbekova
+293; 1259 17578 SEQUENCE public audit_log_log_id_seq azaliaturarbekova
+4342; 0 0 SEQUENCE OWNED BY public audit_log_log_id_seq azaliaturarbekova
+258; 1259 17288 TABLE public authors azaliaturarbekova
+257; 1259 17287 SEQUENCE public authors_author_id_seq azaliaturarbekova
+4343; 0 0 SEQUENCE OWNED BY public authors_author_id_seq azaliaturarbekova
+241; 1259 17112 TABLE public blog_posts azaliaturarbekova
+240; 1259 17111 SEQUENCE public blog_posts_post_id_seq azaliaturarbekova
+4344; 0 0 SEQUENCE OWNED BY public blog_posts_post_id_seq azaliaturarbekova
+261; 1259 17309 TABLE public book_authors azaliaturarbekova
+260; 1259 17298 TABLE public books azaliaturarbekova
+259; 1259 17297 SEQUENCE public books_book_id_seq azaliaturarbekova
+4345; 0 0 SEQUENCE OWNED BY public books_book_id_seq azaliaturarbekova
+243; 1259 17124 TABLE public comments azaliaturarbekova
+242; 1259 17123 SEQUENCE public comments_comment_id_seq azaliaturarbekova
+4346; 0 0 SEQUENCE OWNED BY public comments_comment_id_seq azaliaturarbekova
+226; 1259 16530 TABLE public course_enrollments azaliaturarbekova
+247; 1259 17155 TABLE public courses azaliaturarbekova
+252; 1259 17225 TABLE public courses1 azaliaturarbekova
+246; 1259 17154 SEQUENCE public courses_course_id_seq azaliaturarbekova
+4347; 0 0 SEQUENCE OWNED BY public courses_course_id_seq azaliaturarbekova
+237; 1259 17086 TABLE public departments azaliaturarbekova
+255; 1259 17270 TABLE public departments1 azaliaturarbekova
+232; 1259 16804 TABLE public departments2 azaliaturarbekova
+231; 1259 16803 SEQUENCE public departments2_depart_id_seq azaliaturarbekova
+4348; 0 0 SEQUENCE OWNED BY public departments2_depart_id_seq azaliaturarbekova
+236; 1259 17085 SEQUENCE public departments_dept_id_seq azaliaturarbekova
+4349; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq azaliaturarbekova
+272; 1259 17403 TABLE public employee_skills azaliaturarbekova
+239; 1259 17095 TABLE public employees azaliaturarbekova
+269; 1259 17381 TABLE public employees1 azaliaturarbekova
+268; 1259 17380 SEQUENCE public employees1_emp_id_seq azaliaturarbekova
+4350; 0 0 SEQUENCE OWNED BY public employees1_emp_id_seq azaliaturarbekova
+238; 1259 17094 SEQUENCE public employees_emp_id_seq azaliaturarbekova
+4351; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq azaliaturarbekova
+253; 1259 17244 TABLE public enrollments azaliaturarbekova
+251; 1259 17218 TABLE public enrollments_bad azaliaturarbekova
+290; 1259 17559 TABLE public inventory azaliaturarbekova
+265; 1259 17341 TABLE public loans azaliaturarbekova
+264; 1259 17340 SEQUENCE public loans_loan_id_seq azaliaturarbekova
+4352; 0 0 SEQUENCE OWNED BY public loans_loan_id_seq azaliaturarbekova
+292; 1259 17568 TABLE public logs azaliaturarbekova
+291; 1259 17567 SEQUENCE public logs_log_id_seq azaliaturarbekova
+4353; 0 0 SEQUENCE OWNED BY public logs_log_id_seq azaliaturarbekova
+263; 1259 17327 TABLE public members azaliaturarbekova
+262; 1259 17326 SEQUENCE public members_member_id_seq azaliaturarbekova
+4354; 0 0 SEQUENCE OWNED BY public members_member_id_seq azaliaturarbekova
+282; 1259 17491 TABLE public order_items azaliaturarbekova
+281; 1259 17490 SEQUENCE public order_items_order_item_id_seq azaliaturarbekova
+4355; 0 0 SEQUENCE OWNED BY public order_items_order_item_id_seq azaliaturarbekova
+287; 1259 17544 TABLE public pivoted_sales azaliaturarbekova
+276; 1259 17415 TABLE public product_reviews azaliaturarbekova
+275; 1259 17414 SEQUENCE public product_reviews_review_id_seq azaliaturarbekova
+4356; 0 0 SEQUENCE OWNED BY public product_reviews_review_id_seq azaliaturarbekova
+303; 1259 21088 TABLE public products_test azaliaturarbekova
+274; 1259 17407 TABLE public sales azaliaturarbekova
+271; 1259 17396 TABLE public sales_data azaliaturarbekova
+270; 1259 17395 SEQUENCE public sales_data_sale_id_seq azaliaturarbekova
+4357; 0 0 SEQUENCE OWNED BY public sales_data_sale_id_seq azaliaturarbekova
+273; 1259 17406 SEQUENCE public sales_sale_id_seq azaliaturarbekova
+4358; 0 0 SEQUENCE OWNED BY public sales_sale_id_seq azaliaturarbekova
+249; 1259 17168 TABLE public student_enrollments azaliaturarbekova
+248; 1259 17167 SEQUENCE public student_enrollments_enrollment_id_seq azaliaturarbekova
+4359; 0 0 SEQUENCE OWNED BY public student_enrollments_enrollment_id_seq azaliaturarbekova
+250; 1259 17206 TABLE public student_phones azaliaturarbekova
+245; 1259 17142 TABLE public students azaliaturarbekova
+256; 1259 17276 TABLE public students1 azaliaturarbekova
+267; 1259 17373 TABLE public students3 azaliaturarbekova
+266; 1259 17372 SEQUENCE public students3_student_id_seq azaliaturarbekova
+4360; 0 0 SEQUENCE OWNED BY public students3_student_id_seq azaliaturarbekova
+225; 1259 16398 TABLE public students61 azaliaturarbekova
+224; 1259 16397 SEQUENCE public students61_id_seq azaliaturarbekova
+4361; 0 0 SEQUENCE OWNED BY public students61_id_seq azaliaturarbekova
+254; 1259 17261 TABLE public students_bad azaliaturarbekova
+244; 1259 17141 SEQUENCE public students_student_id_seq azaliaturarbekova
+4362; 0 0 SEQUENCE OWNED BY public students_student_id_seq azaliaturarbekova
+230; 1259 16549 TABLE public transactions azaliaturarbekova
+229; 1259 16548 SEQUENCE public transactions_transaction_id_seq azaliaturarbekova
+4363; 0 0 SEQUENCE OWNED BY public transactions_transaction_id_seq azaliaturarbekova
+295; 1259 17587 TABLE public user_preferences azaliaturarbekova
+235; 1259 17072 TABLE public user_profiles azaliaturarbekova
+234; 1259 17013 TABLE public users azaliaturarbekova
+233; 1259 17012 SEQUENCE public users_user_id_seq azaliaturarbekova
+4364; 0 0 SEQUENCE OWNED BY public users_user_id_seq azaliaturarbekova
+284; 1259 17522 TABLE public warehouse_1 azaliaturarbekova
+283; 1259 17521 SEQUENCE public warehouse_1_product_id_seq azaliaturarbekova
+4365; 0 0 SEQUENCE OWNED BY public warehouse_1_product_id_seq azaliaturarbekova
+286; 1259 17530 TABLE public warehouse_2 azaliaturarbekova
+285; 1259 17529 SEQUENCE public warehouse_2_product_id_seq azaliaturarbekova
+4366; 0 0 SEQUENCE OWNED BY public warehouse_2_product_id_seq azaliaturarbekova
+3968; 2604 17622 DEFAULT lab customer_feedback feedback_id azaliaturarbekova
+3966; 2604 17605 DEFAULT lab employees employee_id azaliaturarbekova
+3960; 2604 17553 DEFAULT public accounts account_id azaliaturarbekova
+3963; 2604 17582 DEFAULT public audit_log log_id azaliaturarbekova
+3942; 2604 17291 DEFAULT public authors author_id azaliaturarbekova
+3933; 2604 17115 DEFAULT public blog_posts post_id azaliaturarbekova
+3943; 2604 17301 DEFAULT public books book_id azaliaturarbekova
+3935; 2604 17127 DEFAULT public comments comment_id azaliaturarbekova
+3939; 2604 17158 DEFAULT public courses course_id azaliaturarbekova
+3955; 2604 17472 DEFAULT public customers customer_id azaliaturarbekova
+3930; 2604 17089 DEFAULT public departments dept_id azaliaturarbekova
+3927; 2604 16807 DEFAULT public departments2 depart_id azaliaturarbekova
+3931; 2604 17098 DEFAULT public employees emp_id azaliaturarbekova
+3951; 2604 17384 DEFAULT public employees1 emp_id azaliaturarbekova
+3947; 2604 17344 DEFAULT public loans loan_id azaliaturarbekova
+3961; 2604 17571 DEFAULT public logs log_id azaliaturarbekova
+3945; 2604 17330 DEFAULT public members member_id azaliaturarbekova
+3957; 2604 17494 DEFAULT public order_items order_item_id azaliaturarbekova
+3956; 2604 17480 DEFAULT public orders order_id azaliaturarbekova
+3954; 2604 17418 DEFAULT public product_reviews review_id azaliaturarbekova
+3924; 2604 16543 DEFAULT public products product_id azaliaturarbekova
+3953; 2604 17410 DEFAULT public sales sale_id azaliaturarbekova
+3952; 2604 17399 DEFAULT public sales_data sale_id azaliaturarbekova
+3940; 2604 17171 DEFAULT public student_enrollments enrollment_id azaliaturarbekova
+3937; 2604 17145 DEFAULT public students student_id azaliaturarbekova
+3950; 2604 17376 DEFAULT public students3 student_id azaliaturarbekova
+3922; 2604 16401 DEFAULT public students61 id azaliaturarbekova
+3925; 2604 16552 DEFAULT public transactions transaction_id azaliaturarbekova
+3928; 2604 17016 DEFAULT public users user_id azaliaturarbekova
+3958; 2604 17525 DEFAULT public warehouse_1 product_id azaliaturarbekova
+3959; 2604 17533 DEFAULT public warehouse_2 product_id azaliaturarbekova
+4325; 0 17619 TABLE DATA lab customer_feedback azaliaturarbekova
+4326; 0 17628 TABLE DATA lab customers azaliaturarbekova
+4322; 0 17602 TABLE DATA lab employees azaliaturarbekova
+4327; 0 17635 TABLE DATA lab orders azaliaturarbekova
+4323; 0 17610 TABLE DATA lab products azaliaturarbekova
+4314; 0 17550 TABLE DATA public accounts azaliaturarbekova
+4319; 0 17579 TABLE DATA public audit_log azaliaturarbekova
+4283; 0 17288 TABLE DATA public authors azaliaturarbekova
+4266; 0 17112 TABLE DATA public blog_posts azaliaturarbekova
+4286; 0 17309 TABLE DATA public book_authors azaliaturarbekova
+4285; 0 17298 TABLE DATA public books azaliaturarbekova
+4268; 0 17124 TABLE DATA public comments azaliaturarbekova
+4251; 0 16530 TABLE DATA public course_enrollments azaliaturarbekova
+4272; 0 17155 TABLE DATA public courses azaliaturarbekova
+4277; 0 17225 TABLE DATA public courses1 azaliaturarbekova
+4303; 0 17469 TABLE DATA public customers azaliaturarbekova
+4262; 0 17086 TABLE DATA public departments azaliaturarbekova
+4280; 0 17270 TABLE DATA public departments1 azaliaturarbekova
+4257; 0 16804 TABLE DATA public departments2 azaliaturarbekova
+4297; 0 17403 TABLE DATA public employee_skills azaliaturarbekova
+4264; 0 17095 TABLE DATA public employees azaliaturarbekova
+4294; 0 17381 TABLE DATA public employees1 azaliaturarbekova
+4278; 0 17244 TABLE DATA public enrollments azaliaturarbekova
+4276; 0 17218 TABLE DATA public enrollments_bad azaliaturarbekova
+4315; 0 17559 TABLE DATA public inventory azaliaturarbekova
+4290; 0 17341 TABLE DATA public loans azaliaturarbekova
+4317; 0 17568 TABLE DATA public logs azaliaturarbekova
+4288; 0 17327 TABLE DATA public members azaliaturarbekova
+4307; 0 17491 TABLE DATA public order_items azaliaturarbekova
+4305; 0 17477 TABLE DATA public orders azaliaturarbekova
+4312; 0 17544 TABLE DATA public pivoted_sales azaliaturarbekova
+4301; 0 17415 TABLE DATA public product_reviews azaliaturarbekova
+4253; 0 16540 TABLE DATA public products azaliaturarbekova
+4328; 0 21088 TABLE DATA public products_test azaliaturarbekova
+4299; 0 17407 TABLE DATA public sales azaliaturarbekova
+4296; 0 17396 TABLE DATA public sales_data azaliaturarbekova
+4274; 0 17168 TABLE DATA public student_enrollments azaliaturarbekova
+4275; 0 17206 TABLE DATA public student_phones azaliaturarbekova
+4270; 0 17142 TABLE DATA public students azaliaturarbekova
+4281; 0 17276 TABLE DATA public students1 azaliaturarbekova
+4292; 0 17373 TABLE DATA public students3 azaliaturarbekova
+4250; 0 16398 TABLE DATA public students61 azaliaturarbekova
+4279; 0 17261 TABLE DATA public students_bad azaliaturarbekova
+4255; 0 16549 TABLE DATA public transactions azaliaturarbekova
+4320; 0 17587 TABLE DATA public user_preferences azaliaturarbekova
+4260; 0 17072 TABLE DATA public user_profiles azaliaturarbekova
+4259; 0 17013 TABLE DATA public users azaliaturarbekova
+4309; 0 17522 TABLE DATA public warehouse_1 azaliaturarbekova
+4311; 0 17530 TABLE DATA public warehouse_2 azaliaturarbekova
+4367; 0 0 SEQUENCE SET lab customer_feedback_feedback_id_seq azaliaturarbekova
+4368; 0 0 SEQUENCE SET lab employees_employee_id_seq azaliaturarbekova
+4369; 0 0 SEQUENCE SET public accounts_account_id_seq azaliaturarbekova
+4370; 0 0 SEQUENCE SET public audit_log_log_id_seq azaliaturarbekova
+4371; 0 0 SEQUENCE SET public authors_author_id_seq azaliaturarbekova
+4372; 0 0 SEQUENCE SET public blog_posts_post_id_seq azaliaturarbekova
+4373; 0 0 SEQUENCE SET public books_book_id_seq azaliaturarbekova
+4374; 0 0 SEQUENCE SET public comments_comment_id_seq azaliaturarbekova
+4375; 0 0 SEQUENCE SET public courses_course_id_seq azaliaturarbekova
+4376; 0 0 SEQUENCE SET public customers_customer_id_seq azaliaturarbekova
+4377; 0 0 SEQUENCE SET public departments2_depart_id_seq azaliaturarbekova
+4378; 0 0 SEQUENCE SET public departments_dept_id_seq azaliaturarbekova
+4379; 0 0 SEQUENCE SET public employees1_emp_id_seq azaliaturarbekova
+4380; 0 0 SEQUENCE SET public employees_emp_id_seq azaliaturarbekova
+4381; 0 0 SEQUENCE SET public loans_loan_id_seq azaliaturarbekova
+4382; 0 0 SEQUENCE SET public logs_log_id_seq azaliaturarbekova
+4383; 0 0 SEQUENCE SET public members_member_id_seq azaliaturarbekova
+4384; 0 0 SEQUENCE SET public order_items_order_item_id_seq azaliaturarbekova
+4385; 0 0 SEQUENCE SET public orders_order_id_seq azaliaturarbekova
+4386; 0 0 SEQUENCE SET public product_reviews_review_id_seq azaliaturarbekova
+4387; 0 0 SEQUENCE SET public products_product_id_seq azaliaturarbekova
+4388; 0 0 SEQUENCE SET public sales_data_sale_id_seq azaliaturarbekova
+4389; 0 0 SEQUENCE SET public sales_sale_id_seq azaliaturarbekova
+4390; 0 0 SEQUENCE SET public student_enrollments_enrollment_id_seq azaliaturarbekova
+4391; 0 0 SEQUENCE SET public students3_student_id_seq azaliaturarbekova
+4392; 0 0 SEQUENCE SET public students61_id_seq azaliaturarbekova
+4393; 0 0 SEQUENCE SET public students_student_id_seq azaliaturarbekova
+4394; 0 0 SEQUENCE SET public transactions_transaction_id_seq azaliaturarbekova
+4395; 0 0 SEQUENCE SET public users_user_id_seq azaliaturarbekova
+4396; 0 0 SEQUENCE SET public warehouse_1_product_id_seq azaliaturarbekova
+4397; 0 0 SEQUENCE SET public warehouse_2_product_id_seq azaliaturarbekova
+4077; 2606 17627 CONSTRAINT lab customer_feedback customer_feedback_pkey azaliaturarbekova
+4079; 2606 17634 CONSTRAINT lab customers customers_pkey azaliaturarbekova
+4073; 2606 17608 CONSTRAINT lab employees employees_pkey azaliaturarbekova
+4082; 2606 17641 CONSTRAINT lab orders orders_pkey azaliaturarbekova
+4075; 2606 17617 CONSTRAINT lab products products_pkey azaliaturarbekova
+4063; 2606 17558 CONSTRAINT public accounts accounts_pkey azaliaturarbekova
+4069; 2606 17586 CONSTRAINT public audit_log audit_log_pkey azaliaturarbekova
+4026; 2606 17296 CONSTRAINT public authors authors_pkey azaliaturarbekova
+3996; 2606 17122 CONSTRAINT public blog_posts blog_posts_pkey azaliaturarbekova
+4032; 2606 17315 CONSTRAINT public book_authors book_authors_pkey azaliaturarbekova
+4028; 2606 17308 CONSTRAINT public books books_isbn_key azaliaturarbekova
+4030; 2606 17306 CONSTRAINT public books books_pkey azaliaturarbekova
+3998; 2606 17135 CONSTRAINT public comments comments_pkey azaliaturarbekova
+3976; 2606 16538 CONSTRAINT public course_enrollments course_enrollments_pkey azaliaturarbekova
+4016; 2606 17230 CONSTRAINT public courses1 courses1_pkey azaliaturarbekova
+4004; 2606 17166 CONSTRAINT public courses courses_course_code_key azaliaturarbekova
+4006; 2606 17164 CONSTRAINT public courses courses_pkey azaliaturarbekova
+4050; 2606 17475 CONSTRAINT public customers customers_pkey azaliaturarbekova
+4022; 2606 17275 CONSTRAINT public departments1 departments1_pkey azaliaturarbekova
+3982; 2606 16811 CONSTRAINT public departments2 departments2_pkey azaliaturarbekova
+3992; 2606 17093 CONSTRAINT public departments departments_pkey azaliaturarbekova
+4042; 2606 17389 CONSTRAINT public employees1 employees1_pkey azaliaturarbekova
+3994; 2606 17105 CONSTRAINT public employees employees_pkey azaliaturarbekova
+4014; 2606 17224 CONSTRAINT public enrollments_bad enrollments_bad_pkey azaliaturarbekova
+4018; 2606 17250 CONSTRAINT public enrollments enrollments_pkey azaliaturarbekova
+4065; 2606 17566 CONSTRAINT public inventory inventory_pkey azaliaturarbekova
+4038; 2606 17352 CONSTRAINT public loans loans_pkey azaliaturarbekova
+4067; 2606 17577 CONSTRAINT public logs logs_pkey azaliaturarbekova
+4034; 2606 17339 CONSTRAINT public members members_email_key azaliaturarbekova
+4036; 2606 17337 CONSTRAINT public members members_pkey azaliaturarbekova
+4057; 2606 17497 CONSTRAINT public order_items order_items_pkey azaliaturarbekova
+4053; 2606 17483 CONSTRAINT public orders orders_pkey azaliaturarbekova
+4048; 2606 17421 CONSTRAINT public product_reviews product_reviews_pkey azaliaturarbekova
+3978; 2606 16547 CONSTRAINT public products products_pkey azaliaturarbekova
+4044; 2606 17402 CONSTRAINT public sales_data sales_data_pkey azaliaturarbekova
+4046; 2606 17413 CONSTRAINT public sales sales_pkey azaliaturarbekova
+4008; 2606 17177 CONSTRAINT public student_enrollments student_enrollments_pkey azaliaturarbekova
+4010; 2606 17179 CONSTRAINT public student_enrollments student_enrollments_student_id_course_id_key azaliaturarbekova
+4012; 2606 17212 CONSTRAINT public student_phones student_phones_pkey azaliaturarbekova
+4024; 2606 17281 CONSTRAINT public students1 students1_pkey azaliaturarbekova
+4040; 2606 17379 CONSTRAINT public students3 students3_pkey azaliaturarbekova
+3974; 2606 16404 CONSTRAINT public students61 students61_pkey azaliaturarbekova
+4020; 2606 17266 CONSTRAINT public students_bad students_bad_pkey azaliaturarbekova
+4000; 2606 17153 CONSTRAINT public students students_email_key azaliaturarbekova
+4002; 2606 17151 CONSTRAINT public students students_pkey azaliaturarbekova
+3980; 2606 16556 CONSTRAINT public transactions transactions_pkey azaliaturarbekova
+4071; 2606 17593 CONSTRAINT public user_preferences user_preferences_pkey azaliaturarbekova
+3990; 2606 17079 CONSTRAINT public user_profiles user_profiles_pkey azaliaturarbekova
+3984; 2606 17026 CONSTRAINT public users users_email_key azaliaturarbekova
+3986; 2606 17022 CONSTRAINT public users users_pkey azaliaturarbekova
+3988; 2606 17024 CONSTRAINT public users users_username_key azaliaturarbekova
+4059; 2606 17528 CONSTRAINT public warehouse_1 warehouse_1_pkey azaliaturarbekova
+4061; 2606 17536 CONSTRAINT public warehouse_2 warehouse_2_pkey azaliaturarbekova
+4080; 1259 17642 INDEX lab orders_customer_id_idx azaliaturarbekova
+4054; 1259 17519 INDEX public idx_order_items_order_id azaliaturarbekova
+4055; 1259 17520 INDEX public idx_order_items_product_id azaliaturarbekova
+4051; 1259 17518 INDEX public idx_orders_customer_id azaliaturarbekova
+4093; 2606 17321 FK CONSTRAINT public book_authors book_authors_author_id_fkey azaliaturarbekova
+4094; 2606 17316 FK CONSTRAINT public book_authors book_authors_book_id_fkey azaliaturarbekova
+4092; 2606 17513 FK CONSTRAINT public books books_author_id_fkey azaliaturarbekova
+4086; 2606 17136 FK CONSTRAINT public comments comments_post_id_fkey azaliaturarbekova
+4097; 2606 17390 FK CONSTRAINT public employees1 employees1_dept_id_fkey azaliaturarbekova
+4084; 2606 17106 FK CONSTRAINT public employees employees_dept_id_fkey azaliaturarbekova
+4085; 2606 17508 FK CONSTRAINT public employees employees_manager_id_fkey azaliaturarbekova
+4090; 2606 17256 FK CONSTRAINT public enrollments enrollments_course_id_fkey azaliaturarbekova
+4095; 2606 17358 FK CONSTRAINT public loans loans_book_id_fkey azaliaturarbekova
+4096; 2606 17353 FK CONSTRAINT public loans loans_member_id_fkey azaliaturarbekova
+4099; 2606 17498 FK CONSTRAINT public order_items order_items_order_id_fkey azaliaturarbekova
+4100; 2606 17503 FK CONSTRAINT public order_items order_items_product_id_fkey azaliaturarbekova
+4098; 2606 17484 FK CONSTRAINT public orders orders_customer_id_fkey azaliaturarbekova
+4087; 2606 17180 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey azaliaturarbekova
+4088; 2606 17185 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey1 azaliaturarbekova
+4089; 2606 17213 FK CONSTRAINT public student_phones student_phones_student_id_fkey azaliaturarbekova
+4091; 2606 17282 FK CONSTRAINT public students1 students1_department_id_fkey azaliaturarbekova
+4101; 2606 17594 FK CONSTRAINT public user_preferences user_preferences_user_id_fkey azaliaturarbekova
+4083; 2606 17080 FK CONSTRAINT public user_profiles user_profiles_user_id_fkey azaliaturarbekova
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -s > ~/schema_only.sql
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -a > ~/data_only.sql
+pg_dump: warning: there are circular foreign-key constraints on this table:
+pg_dump: detail: employees
+pg_dump: hint: You might not be able to restore the dump without using --disable-triggers or temporarily dropping the constraints.
+pg_dump: hint: Consider using a full dump instead of a --data-only dump to avoid this problem.
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -T public.logs -T public.products_test > ~/backup_without_logs.sql
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -Fc --verbose > ~/full_production_backup.dump
+pg_dump: executing SELECT pg_catalog.set_config('search_path', '', false);
+pg_dump: last built-in OID is 16383
+pg_dump: reading extensions
+pg_dump: identifying extension members
+pg_dump: reading schemas
+pg_dump: reading user-defined tables
+pg_dump: reading user-defined functions
+pg_dump: reading user-defined types
+pg_dump: reading procedural languages
+pg_dump: reading user-defined aggregate functions
+pg_dump: reading user-defined operators
+pg_dump: reading user-defined access methods
+pg_dump: reading user-defined operator classes
+pg_dump: reading user-defined operator families
+pg_dump: reading user-defined text search parsers
+pg_dump: reading user-defined text search templates
+pg_dump: reading user-defined text search dictionaries
+pg_dump: reading user-defined text search configurations
+pg_dump: reading user-defined foreign-data wrappers
+pg_dump: reading user-defined foreign servers
+pg_dump: reading default privileges
+pg_dump: reading user-defined collations
+pg_dump: reading user-defined conversions
+pg_dump: reading type casts
+pg_dump: reading transforms
+pg_dump: reading table inheritance information
+pg_dump: reading event triggers
+pg_dump: finding extension tables
+pg_dump: finding inheritance relationships
+pg_dump: reading column info for interesting tables
+pg_dump: finding table default expressions
+pg_dump: finding table check constraints
+pg_dump: flagging inherited columns in subtables
+pg_dump: reading partitioning data
+pg_dump: reading indexes
+pg_dump: flagging indexes in partitioned tables
+pg_dump: reading extended statistics
+pg_dump: reading constraints
+pg_dump: reading triggers
+pg_dump: reading rewrite rules
+pg_dump: reading policies
+pg_dump: reading row-level security policies
+pg_dump: reading publications
+pg_dump: reading publication membership of tables
+pg_dump: reading publication membership of schemas
+pg_dump: reading subscriptions
+pg_dump: reading subscription membership of tables
+pg_dump: reading large objects
+pg_dump: reading dependency data
+pg_dump: saving encoding = UTF8
+pg_dump: saving "standard_conforming_strings = on"
+pg_dump: saving "search_path = "
+pg_dump: saving database definition
+pg_dump: dumping contents of table "lab.customer_feedback"
+pg_dump: dumping contents of table "lab.customers"
+pg_dump: dumping contents of table "lab.employees"
+pg_dump: dumping contents of table "lab.orders"
+pg_dump: dumping contents of table "lab.products"
+pg_dump: dumping contents of table "public.accounts"
+pg_dump: dumping contents of table "public.audit_log"
+pg_dump: dumping contents of table "public.authors"
+pg_dump: dumping contents of table "public.blog_posts"
+pg_dump: dumping contents of table "public.book_authors"
+pg_dump: dumping contents of table "public.books"
+pg_dump: dumping contents of table "public.comments"
+pg_dump: dumping contents of table "public.course_enrollments"
+pg_dump: dumping contents of table "public.courses"
+pg_dump: dumping contents of table "public.courses1"
+pg_dump: dumping contents of table "public.customers"
+pg_dump: dumping contents of table "public.departments"
+pg_dump: dumping contents of table "public.departments1"
+pg_dump: dumping contents of table "public.departments2"
+pg_dump: dumping contents of table "public.employee_skills"
+pg_dump: dumping contents of table "public.employees"
+pg_dump: dumping contents of table "public.employees1"
+pg_dump: dumping contents of table "public.enrollments"
+pg_dump: dumping contents of table "public.enrollments_bad"
+pg_dump: dumping contents of table "public.inventory"
+pg_dump: dumping contents of table "public.loans"
+pg_dump: dumping contents of table "public.logs"
+pg_dump: dumping contents of table "public.members"
+pg_dump: dumping contents of table "public.order_items"
+pg_dump: dumping contents of table "public.orders"
+pg_dump: dumping contents of table "public.pivoted_sales"
+pg_dump: dumping contents of table "public.product_reviews"
+pg_dump: dumping contents of table "public.products"
+pg_dump: dumping contents of table "public.products_test"
+pg_dump: dumping contents of table "public.sales"
+pg_dump: dumping contents of table "public.sales_data"
+pg_dump: dumping contents of table "public.student_enrollments"
+pg_dump: dumping contents of table "public.student_phones"
+pg_dump: dumping contents of table "public.students"
+pg_dump: dumping contents of table "public.students1"
+pg_dump: dumping contents of table "public.students3"
+pg_dump: dumping contents of table "public.students61"
+pg_dump: dumping contents of table "public.students_bad"
+pg_dump: dumping contents of table "public.transactions"
+pg_dump: dumping contents of table "public.user_preferences"
+pg_dump: dumping contents of table "public.user_profiles"
+pg_dump: dumping contents of table "public.users"
+pg_dump: dumping contents of table "public.warehouse_1"
+pg_dump: dumping contents of table "public.warehouse_2"
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d postgres -Fc -O > ~/backup_with_ownership.dump
+postgres=# \! pg_dumpall -h localhost -U azaliaturarbekova > ~/full_cluster_backup.sql
+postgres=# \! ls -lh ~/schema_only.sql ~/data_only.sql ~/backup_without_logs.sql ~/full_production_backup.dump ~/backup_with_ownership.dump ~/full_cluster_backup.sql
+-rw-r--r--  1 azaliaturarbekova  staff    98K Nov  3 22:44 /Users/azaliaturarbekova/backup_with_ownership.dump
+-rw-r--r--  1 azaliaturarbekova  staff    72K Nov  3 22:44 /Users/azaliaturarbekova/backup_without_logs.sql
+-rw-r--r--  1 azaliaturarbekova  staff    19K Nov  3 22:44 /Users/azaliaturarbekova/data_only.sql
+-rw-r--r--  1 azaliaturarbekova  staff   326K Nov  3 22:44 /Users/azaliaturarbekova/full_cluster_backup.sql
+-rw-r--r--  1 azaliaturarbekova  staff    98K Nov  3 22:44 /Users/azaliaturarbekova/full_production_backup.dump
+-rw-r--r--  1 azaliaturarbekova  staff    54K Nov  3 22:44 /Users/azaliaturarbekova/schema_only.sql
+postgres=# \! pg_restore --list ~/full_production_backup.dump
+;
+; Archive created at 2026-11-03 22:44:30 +06
+;     dbname: postgres
+;     TOC Entries: 304
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6 (Homebrew)
+;     Dumped by pg_dump version: 18.6 (Homebrew)
+;
+;
+; Selected TOC Entries:
+;
+8; 2615 17600 SCHEMA - lab azaliaturarbekova
+300; 1259 17619 TABLE lab customer_feedback azaliaturarbekova
+299; 1259 17618 SEQUENCE lab customer_feedback_feedback_id_seq azaliaturarbekova
+4336; 0 0 SEQUENCE OWNED BY lab customer_feedback_feedback_id_seq azaliaturarbekova
+278; 1259 17469 TABLE public customers azaliaturarbekova
+277; 1259 17468 SEQUENCE public customers_customer_id_seq azaliaturarbekova
+4337; 0 0 SEQUENCE OWNED BY public customers_customer_id_seq azaliaturarbekova
+301; 1259 17628 TABLE lab customers azaliaturarbekova
+297; 1259 17602 TABLE lab employees azaliaturarbekova
+296; 1259 17601 SEQUENCE lab employees_employee_id_seq azaliaturarbekova
+4338; 0 0 SEQUENCE OWNED BY lab employees_employee_id_seq azaliaturarbekova
+280; 1259 17477 TABLE public orders azaliaturarbekova
+279; 1259 17476 SEQUENCE public orders_order_id_seq azaliaturarbekova
+4339; 0 0 SEQUENCE OWNED BY public orders_order_id_seq azaliaturarbekova
+302; 1259 17635 TABLE lab orders azaliaturarbekova
+228; 1259 16540 TABLE public products azaliaturarbekova
+227; 1259 16539 SEQUENCE public products_product_id_seq azaliaturarbekova
+4340; 0 0 SEQUENCE OWNED BY public products_product_id_seq azaliaturarbekova
+298; 1259 17610 TABLE lab products azaliaturarbekova
+289; 1259 17550 TABLE public accounts azaliaturarbekova
+288; 1259 17549 SEQUENCE public accounts_account_id_seq azaliaturarbekova
+4341; 0 0 SEQUENCE OWNED BY public accounts_account_id_seq azaliaturarbekova
+294; 1259 17579 TABLE public audit_log azaliaturarbekova
+293; 1259 17578 SEQUENCE public audit_log_log_id_seq azaliaturarbekova
+4342; 0 0 SEQUENCE OWNED BY public audit_log_log_id_seq azaliaturarbekova
+258; 1259 17288 TABLE public authors azaliaturarbekova
+257; 1259 17287 SEQUENCE public authors_author_id_seq azaliaturarbekova
+4343; 0 0 SEQUENCE OWNED BY public authors_author_id_seq azaliaturarbekova
+241; 1259 17112 TABLE public blog_posts azaliaturarbekova
+240; 1259 17111 SEQUENCE public blog_posts_post_id_seq azaliaturarbekova
+4344; 0 0 SEQUENCE OWNED BY public blog_posts_post_id_seq azaliaturarbekova
+261; 1259 17309 TABLE public book_authors azaliaturarbekova
+260; 1259 17298 TABLE public books azaliaturarbekova
+259; 1259 17297 SEQUENCE public books_book_id_seq azaliaturarbekova
+4345; 0 0 SEQUENCE OWNED BY public books_book_id_seq azaliaturarbekova
+243; 1259 17124 TABLE public comments azaliaturarbekova
+242; 1259 17123 SEQUENCE public comments_comment_id_seq azaliaturarbekova
+4346; 0 0 SEQUENCE OWNED BY public comments_comment_id_seq azaliaturarbekova
+226; 1259 16530 TABLE public course_enrollments azaliaturarbekova
+247; 1259 17155 TABLE public courses azaliaturarbekova
+252; 1259 17225 TABLE public courses1 azaliaturarbekova
+246; 1259 17154 SEQUENCE public courses_course_id_seq azaliaturarbekova
+4347; 0 0 SEQUENCE OWNED BY public courses_course_id_seq azaliaturarbekova
+237; 1259 17086 TABLE public departments azaliaturarbekova
+255; 1259 17270 TABLE public departments1 azaliaturarbekova
+232; 1259 16804 TABLE public departments2 azaliaturarbekova
+231; 1259 16803 SEQUENCE public departments2_depart_id_seq azaliaturarbekova
+4348; 0 0 SEQUENCE OWNED BY public departments2_depart_id_seq azaliaturarbekova
+236; 1259 17085 SEQUENCE public departments_dept_id_seq azaliaturarbekova
+4349; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq azaliaturarbekova
+272; 1259 17403 TABLE public employee_skills azaliaturarbekova
+239; 1259 17095 TABLE public employees azaliaturarbekova
+269; 1259 17381 TABLE public employees1 azaliaturarbekova
+268; 1259 17380 SEQUENCE public employees1_emp_id_seq azaliaturarbekova
+4350; 0 0 SEQUENCE OWNED BY public employees1_emp_id_seq azaliaturarbekova
+238; 1259 17094 SEQUENCE public employees_emp_id_seq azaliaturarbekova
+4351; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq azaliaturarbekova
+253; 1259 17244 TABLE public enrollments azaliaturarbekova
+251; 1259 17218 TABLE public enrollments_bad azaliaturarbekova
+290; 1259 17559 TABLE public inventory azaliaturarbekova
+265; 1259 17341 TABLE public loans azaliaturarbekova
+264; 1259 17340 SEQUENCE public loans_loan_id_seq azaliaturarbekova
+4352; 0 0 SEQUENCE OWNED BY public loans_loan_id_seq azaliaturarbekova
+292; 1259 17568 TABLE public logs azaliaturarbekova
+291; 1259 17567 SEQUENCE public logs_log_id_seq azaliaturarbekova
+4353; 0 0 SEQUENCE OWNED BY public logs_log_id_seq azaliaturarbekova
+263; 1259 17327 TABLE public members azaliaturarbekova
+262; 1259 17326 SEQUENCE public members_member_id_seq azaliaturarbekova
+4354; 0 0 SEQUENCE OWNED BY public members_member_id_seq azaliaturarbekova
+282; 1259 17491 TABLE public order_items azaliaturarbekova
+281; 1259 17490 SEQUENCE public order_items_order_item_id_seq azaliaturarbekova
+4355; 0 0 SEQUENCE OWNED BY public order_items_order_item_id_seq azaliaturarbekova
+287; 1259 17544 TABLE public pivoted_sales azaliaturarbekova
+276; 1259 17415 TABLE public product_reviews azaliaturarbekova
+275; 1259 17414 SEQUENCE public product_reviews_review_id_seq azaliaturarbekova
+4356; 0 0 SEQUENCE OWNED BY public product_reviews_review_id_seq azaliaturarbekova
+303; 1259 21088 TABLE public products_test azaliaturarbekova
+274; 1259 17407 TABLE public sales azaliaturarbekova
+271; 1259 17396 TABLE public sales_data azaliaturarbekova
+270; 1259 17395 SEQUENCE public sales_data_sale_id_seq azaliaturarbekova
+4357; 0 0 SEQUENCE OWNED BY public sales_data_sale_id_seq azaliaturarbekova
+273; 1259 17406 SEQUENCE public sales_sale_id_seq azaliaturarbekova
+4358; 0 0 SEQUENCE OWNED BY public sales_sale_id_seq azaliaturarbekova
+249; 1259 17168 TABLE public student_enrollments azaliaturarbekova
+248; 1259 17167 SEQUENCE public student_enrollments_enrollment_id_seq azaliaturarbekova
+4359; 0 0 SEQUENCE OWNED BY public student_enrollments_enrollment_id_seq azaliaturarbekova
+250; 1259 17206 TABLE public student_phones azaliaturarbekova
+245; 1259 17142 TABLE public students azaliaturarbekova
+256; 1259 17276 TABLE public students1 azaliaturarbekova
+267; 1259 17373 TABLE public students3 azaliaturarbekova
+266; 1259 17372 SEQUENCE public students3_student_id_seq azaliaturarbekova
+4360; 0 0 SEQUENCE OWNED BY public students3_student_id_seq azaliaturarbekova
+225; 1259 16398 TABLE public students61 azaliaturarbekova
+224; 1259 16397 SEQUENCE public students61_id_seq azaliaturarbekova
+4361; 0 0 SEQUENCE OWNED BY public students61_id_seq azaliaturarbekova
+254; 1259 17261 TABLE public students_bad azaliaturarbekova
+244; 1259 17141 SEQUENCE public students_student_id_seq azaliaturarbekova
+4362; 0 0 SEQUENCE OWNED BY public students_student_id_seq azaliaturarbekova
+230; 1259 16549 TABLE public transactions azaliaturarbekova
+229; 1259 16548 SEQUENCE public transactions_transaction_id_seq azaliaturarbekova
+4363; 0 0 SEQUENCE OWNED BY public transactions_transaction_id_seq azaliaturarbekova
+295; 1259 17587 TABLE public user_preferences azaliaturarbekova
+235; 1259 17072 TABLE public user_profiles azaliaturarbekova
+234; 1259 17013 TABLE public users azaliaturarbekova
+233; 1259 17012 SEQUENCE public users_user_id_seq azaliaturarbekova
+4364; 0 0 SEQUENCE OWNED BY public users_user_id_seq azaliaturarbekova
+284; 1259 17522 TABLE public warehouse_1 azaliaturarbekova
+283; 1259 17521 SEQUENCE public warehouse_1_product_id_seq azaliaturarbekova
+4365; 0 0 SEQUENCE OWNED BY public warehouse_1_product_id_seq azaliaturarbekova
+286; 1259 17530 TABLE public warehouse_2 azaliaturarbekova
+285; 1259 17529 SEQUENCE public warehouse_2_product_id_seq azaliaturarbekova
+4366; 0 0 SEQUENCE OWNED BY public warehouse_2_product_id_seq azaliaturarbekova
+3968; 2604 17622 DEFAULT lab customer_feedback feedback_id azaliaturarbekova
+3966; 2604 17605 DEFAULT lab employees employee_id azaliaturarbekova
+3960; 2604 17553 DEFAULT public accounts account_id azaliaturarbekova
+3963; 2604 17582 DEFAULT public audit_log log_id azaliaturarbekova
+3942; 2604 17291 DEFAULT public authors author_id azaliaturarbekova
+3933; 2604 17115 DEFAULT public blog_posts post_id azaliaturarbekova
+3943; 2604 17301 DEFAULT public books book_id azaliaturarbekova
+3935; 2604 17127 DEFAULT public comments comment_id azaliaturarbekova
+3939; 2604 17158 DEFAULT public courses course_id azaliaturarbekova
+3955; 2604 17472 DEFAULT public customers customer_id azaliaturarbekova
+3930; 2604 17089 DEFAULT public departments dept_id azaliaturarbekova
+3927; 2604 16807 DEFAULT public departments2 depart_id azaliaturarbekova
+3931; 2604 17098 DEFAULT public employees emp_id azaliaturarbekova
+3951; 2604 17384 DEFAULT public employees1 emp_id azaliaturarbekova
+3947; 2604 17344 DEFAULT public loans loan_id azaliaturarbekova
+3961; 2604 17571 DEFAULT public logs log_id azaliaturarbekova
+3945; 2604 17330 DEFAULT public members member_id azaliaturarbekova
+3957; 2604 17494 DEFAULT public order_items order_item_id azaliaturarbekova
+3956; 2604 17480 DEFAULT public orders order_id azaliaturarbekova
+3954; 2604 17418 DEFAULT public product_reviews review_id azaliaturarbekova
+3924; 2604 16543 DEFAULT public products product_id azaliaturarbekova
+3953; 2604 17410 DEFAULT public sales sale_id azaliaturarbekova
+3952; 2604 17399 DEFAULT public sales_data sale_id azaliaturarbekova
+3940; 2604 17171 DEFAULT public student_enrollments enrollment_id azaliaturarbekova
+3937; 2604 17145 DEFAULT public students student_id azaliaturarbekova
+3950; 2604 17376 DEFAULT public students3 student_id azaliaturarbekova
+3922; 2604 16401 DEFAULT public students61 id azaliaturarbekova
+3925; 2604 16552 DEFAULT public transactions transaction_id azaliaturarbekova
+3928; 2604 17016 DEFAULT public users user_id azaliaturarbekova
+3958; 2604 17525 DEFAULT public warehouse_1 product_id azaliaturarbekova
+3959; 2604 17533 DEFAULT public warehouse_2 product_id azaliaturarbekova
+4325; 0 17619 TABLE DATA lab customer_feedback azaliaturarbekova
+4326; 0 17628 TABLE DATA lab customers azaliaturarbekova
+4322; 0 17602 TABLE DATA lab employees azaliaturarbekova
+4327; 0 17635 TABLE DATA lab orders azaliaturarbekova
+4323; 0 17610 TABLE DATA lab products azaliaturarbekova
+4314; 0 17550 TABLE DATA public accounts azaliaturarbekova
+4319; 0 17579 TABLE DATA public audit_log azaliaturarbekova
+4283; 0 17288 TABLE DATA public authors azaliaturarbekova
+4266; 0 17112 TABLE DATA public blog_posts azaliaturarbekova
+4286; 0 17309 TABLE DATA public book_authors azaliaturarbekova
+4285; 0 17298 TABLE DATA public books azaliaturarbekova
+4268; 0 17124 TABLE DATA public comments azaliaturarbekova
+4251; 0 16530 TABLE DATA public course_enrollments azaliaturarbekova
+4272; 0 17155 TABLE DATA public courses azaliaturarbekova
+4277; 0 17225 TABLE DATA public courses1 azaliaturarbekova
+4303; 0 17469 TABLE DATA public customers azaliaturarbekova
+4262; 0 17086 TABLE DATA public departments azaliaturarbekova
+4280; 0 17270 TABLE DATA public departments1 azaliaturarbekova
+4257; 0 16804 TABLE DATA public departments2 azaliaturarbekova
+4297; 0 17403 TABLE DATA public employee_skills azaliaturarbekova
+4264; 0 17095 TABLE DATA public employees azaliaturarbekova
+4294; 0 17381 TABLE DATA public employees1 azaliaturarbekova
+4278; 0 17244 TABLE DATA public enrollments azaliaturarbekova
+4276; 0 17218 TABLE DATA public enrollments_bad azaliaturarbekova
+4315; 0 17559 TABLE DATA public inventory azaliaturarbekova
+4290; 0 17341 TABLE DATA public loans azaliaturarbekova
+4317; 0 17568 TABLE DATA public logs azaliaturarbekova
+4288; 0 17327 TABLE DATA public members azaliaturarbekova
+4307; 0 17491 TABLE DATA public order_items azaliaturarbekova
+4305; 0 17477 TABLE DATA public orders azaliaturarbekova
+4312; 0 17544 TABLE DATA public pivoted_sales azaliaturarbekova
+4301; 0 17415 TABLE DATA public product_reviews azaliaturarbekova
+4253; 0 16540 TABLE DATA public products azaliaturarbekova
+4328; 0 21088 TABLE DATA public products_test azaliaturarbekova
+4299; 0 17407 TABLE DATA public sales azaliaturarbekova
+4296; 0 17396 TABLE DATA public sales_data azaliaturarbekova
+4274; 0 17168 TABLE DATA public student_enrollments azaliaturarbekova
+4275; 0 17206 TABLE DATA public student_phones azaliaturarbekova
+4270; 0 17142 TABLE DATA public students azaliaturarbekova
+4281; 0 17276 TABLE DATA public students1 azaliaturarbekova
+4292; 0 17373 TABLE DATA public students3 azaliaturarbekova
+4250; 0 16398 TABLE DATA public students61 azaliaturarbekova
+4279; 0 17261 TABLE DATA public students_bad azaliaturarbekova
+4255; 0 16549 TABLE DATA public transactions azaliaturarbekova
+4320; 0 17587 TABLE DATA public user_preferences azaliaturarbekova
+4260; 0 17072 TABLE DATA public user_profiles azaliaturarbekova
+4259; 0 17013 TABLE DATA public users azaliaturarbekova
+4309; 0 17522 TABLE DATA public warehouse_1 azaliaturarbekova
+4311; 0 17530 TABLE DATA public warehouse_2 azaliaturarbekova
+4367; 0 0 SEQUENCE SET lab customer_feedback_feedback_id_seq azaliaturarbekova
+4368; 0 0 SEQUENCE SET lab employees_employee_id_seq azaliaturarbekova
+4369; 0 0 SEQUENCE SET public accounts_account_id_seq azaliaturarbekova
+4370; 0 0 SEQUENCE SET public audit_log_log_id_seq azaliaturarbekova
+4371; 0 0 SEQUENCE SET public authors_author_id_seq azaliaturarbekova
+4372; 0 0 SEQUENCE SET public blog_posts_post_id_seq azaliaturarbekova
+4373; 0 0 SEQUENCE SET public books_book_id_seq azaliaturarbekova
+4374; 0 0 SEQUENCE SET public comments_comment_id_seq azaliaturarbekova
+4375; 0 0 SEQUENCE SET public courses_course_id_seq azaliaturarbekova
+4376; 0 0 SEQUENCE SET public customers_customer_id_seq azaliaturarbekova
+4377; 0 0 SEQUENCE SET public departments2_depart_id_seq azaliaturarbekova
+4378; 0 0 SEQUENCE SET public departments_dept_id_seq azaliaturarbekova
+4379; 0 0 SEQUENCE SET public employees1_emp_id_seq azaliaturarbekova
+4380; 0 0 SEQUENCE SET public employees_emp_id_seq azaliaturarbekova
+4381; 0 0 SEQUENCE SET public loans_loan_id_seq azaliaturarbekova
+4382; 0 0 SEQUENCE SET public logs_log_id_seq azaliaturarbekova
+4383; 0 0 SEQUENCE SET public members_member_id_seq azaliaturarbekova
+4384; 0 0 SEQUENCE SET public order_items_order_item_id_seq azaliaturarbekova
+4385; 0 0 SEQUENCE SET public orders_order_id_seq azaliaturarbekova
+4386; 0 0 SEQUENCE SET public product_reviews_review_id_seq azaliaturarbekova
+4387; 0 0 SEQUENCE SET public products_product_id_seq azaliaturarbekova
+4388; 0 0 SEQUENCE SET public sales_data_sale_id_seq azaliaturarbekova
+4389; 0 0 SEQUENCE SET public sales_sale_id_seq azaliaturarbekova
+4390; 0 0 SEQUENCE SET public student_enrollments_enrollment_id_seq azaliaturarbekova
+4391; 0 0 SEQUENCE SET public students3_student_id_seq azaliaturarbekova
+4392; 0 0 SEQUENCE SET public students61_id_seq azaliaturarbekova
+4393; 0 0 SEQUENCE SET public students_student_id_seq azaliaturarbekova
+4394; 0 0 SEQUENCE SET public transactions_transaction_id_seq azaliaturarbekova
+4395; 0 0 SEQUENCE SET public users_user_id_seq azaliaturarbekova
+4396; 0 0 SEQUENCE SET public warehouse_1_product_id_seq azaliaturarbekova
+4397; 0 0 SEQUENCE SET public warehouse_2_product_id_seq azaliaturarbekova
+4077; 2606 17627 CONSTRAINT lab customer_feedback customer_feedback_pkey azaliaturarbekova
+4079; 2606 17634 CONSTRAINT lab customers customers_pkey azaliaturarbekova
+4073; 2606 17608 CONSTRAINT lab employees employees_pkey azaliaturarbekova
+4082; 2606 17641 CONSTRAINT lab orders orders_pkey azaliaturarbekova
+4075; 2606 17617 CONSTRAINT lab products products_pkey azaliaturarbekova
+4063; 2606 17558 CONSTRAINT public accounts accounts_pkey azaliaturarbekova
+4069; 2606 17586 CONSTRAINT public audit_log audit_log_pkey azaliaturarbekova
+4026; 2606 17296 CONSTRAINT public authors authors_pkey azaliaturarbekova
+3996; 2606 17122 CONSTRAINT public blog_posts blog_posts_pkey azaliaturarbekova
+4032; 2606 17315 CONSTRAINT public book_authors book_authors_pkey azaliaturarbekova
+4028; 2606 17308 CONSTRAINT public books books_isbn_key azaliaturarbekova
+4030; 2606 17306 CONSTRAINT public books books_pkey azaliaturarbekova
+3998; 2606 17135 CONSTRAINT public comments comments_pkey azaliaturarbekova
+3976; 2606 16538 CONSTRAINT public course_enrollments course_enrollments_pkey azaliaturarbekova
+4016; 2606 17230 CONSTRAINT public courses1 courses1_pkey azaliaturarbekova
+4004; 2606 17166 CONSTRAINT public courses courses_course_code_key azaliaturarbekova
+4006; 2606 17164 CONSTRAINT public courses courses_pkey azaliaturarbekova
+4050; 2606 17475 CONSTRAINT public customers customers_pkey azaliaturarbekova
+4022; 2606 17275 CONSTRAINT public departments1 departments1_pkey azaliaturarbekova
+3982; 2606 16811 CONSTRAINT public departments2 departments2_pkey azaliaturarbekova
+3992; 2606 17093 CONSTRAINT public departments departments_pkey azaliaturarbekova
+4042; 2606 17389 CONSTRAINT public employees1 employees1_pkey azaliaturarbekova
+3994; 2606 17105 CONSTRAINT public employees employees_pkey azaliaturarbekova
+4014; 2606 17224 CONSTRAINT public enrollments_bad enrollments_bad_pkey azaliaturarbekova
+4018; 2606 17250 CONSTRAINT public enrollments enrollments_pkey azaliaturarbekova
+4065; 2606 17566 CONSTRAINT public inventory inventory_pkey azaliaturarbekova
+4038; 2606 17352 CONSTRAINT public loans loans_pkey azaliaturarbekova
+4067; 2606 17577 CONSTRAINT public logs logs_pkey azaliaturarbekova
+4034; 2606 17339 CONSTRAINT public members members_email_key azaliaturarbekova
+4036; 2606 17337 CONSTRAINT public members members_pkey azaliaturarbekova
+4057; 2606 17497 CONSTRAINT public order_items order_items_pkey azaliaturarbekova
+4053; 2606 17483 CONSTRAINT public orders orders_pkey azaliaturarbekova
+4048; 2606 17421 CONSTRAINT public product_reviews product_reviews_pkey azaliaturarbekova
+3978; 2606 16547 CONSTRAINT public products products_pkey azaliaturarbekova
+4044; 2606 17402 CONSTRAINT public sales_data sales_data_pkey azaliaturarbekova
+4046; 2606 17413 CONSTRAINT public sales sales_pkey azaliaturarbekova
+4008; 2606 17177 CONSTRAINT public student_enrollments student_enrollments_pkey azaliaturarbekova
+4010; 2606 17179 CONSTRAINT public student_enrollments student_enrollments_student_id_course_id_key azaliaturarbekova
+4012; 2606 17212 CONSTRAINT public student_phones student_phones_pkey azaliaturarbekova
+4024; 2606 17281 CONSTRAINT public students1 students1_pkey azaliaturarbekova
+4040; 2606 17379 CONSTRAINT public students3 students3_pkey azaliaturarbekova
+3974; 2606 16404 CONSTRAINT public students61 students61_pkey azaliaturarbekova
+4020; 2606 17266 CONSTRAINT public students_bad students_bad_pkey azaliaturarbekova
+4000; 2606 17153 CONSTRAINT public students students_email_key azaliaturarbekova
+4002; 2606 17151 CONSTRAINT public students students_pkey azaliaturarbekova
+3980; 2606 16556 CONSTRAINT public transactions transactions_pkey azaliaturarbekova
+4071; 2606 17593 CONSTRAINT public user_preferences user_preferences_pkey azaliaturarbekova
+3990; 2606 17079 CONSTRAINT public user_profiles user_profiles_pkey azaliaturarbekova
+3984; 2606 17026 CONSTRAINT public users users_email_key azaliaturarbekova
+3986; 2606 17022 CONSTRAINT public users users_pkey azaliaturarbekova
+3988; 2606 17024 CONSTRAINT public users users_username_key azaliaturarbekova
+4059; 2606 17528 CONSTRAINT public warehouse_1 warehouse_1_pkey azaliaturarbekova
+4061; 2606 17536 CONSTRAINT public warehouse_2 warehouse_2_pkey azaliaturarbekova
+4080; 1259 17642 INDEX lab orders_customer_id_idx azaliaturarbekova
+4054; 1259 17519 INDEX public idx_order_items_order_id azaliaturarbekova
+4055; 1259 17520 INDEX public idx_order_items_product_id azaliaturarbekova
+4051; 1259 17518 INDEX public idx_orders_customer_id azaliaturarbekova
+4093; 2606 17321 FK CONSTRAINT public book_authors book_authors_author_id_fkey azaliaturarbekova
+4094; 2606 17316 FK CONSTRAINT public book_authors book_authors_book_id_fkey azaliaturarbekova
+4092; 2606 17513 FK CONSTRAINT public books books_author_id_fkey azaliaturarbekova
+4086; 2606 17136 FK CONSTRAINT public comments comments_post_id_fkey azaliaturarbekova
+4097; 2606 17390 FK CONSTRAINT public employees1 employees1_dept_id_fkey azaliaturarbekova
+4084; 2606 17106 FK CONSTRAINT public employees employees_dept_id_fkey azaliaturarbekova
+4085; 2606 17508 FK CONSTRAINT public employees employees_manager_id_fkey azaliaturarbekova
+4090; 2606 17256 FK CONSTRAINT public enrollments enrollments_course_id_fkey azaliaturarbekova
+4095; 2606 17358 FK CONSTRAINT public loans loans_book_id_fkey azaliaturarbekova
+4096; 2606 17353 FK CONSTRAINT public loans loans_member_id_fkey azaliaturarbekova
+4099; 2606 17498 FK CONSTRAINT public order_items order_items_order_id_fkey azaliaturarbekova
+4100; 2606 17503 FK CONSTRAINT public order_items order_items_product_id_fkey azaliaturarbekova
+4098; 2606 17484 FK CONSTRAINT public orders orders_customer_id_fkey azaliaturarbekova
+4087; 2606 17180 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey azaliaturarbekova
+4088; 2606 17185 FK CONSTRAINT public student_enrollments student_enrollments_student_id_fkey1 azaliaturarbekova
+4089; 2606 17213 FK CONSTRAINT public student_phones student_phones_student_id_fkey azaliaturarbekova
+4091; 2606 17282 FK CONSTRAINT public students1 students1_department_id_fkey azaliaturarbekova
+4101; 2606 17594 FK CONSTRAINT public user_preferences user_preferences_user_id_fkey azaliaturarbekova
+4083; 2606 17080 FK CONSTRAINT public user_profiles user_profiles_user_id_fkey azaliaturarbekova
+postgres=# SHOW wal_level;
+ wal_level 
+-----------
+ replica
+(1 row)
+
+postgres=# SHOW archive_mode;
+ archive_mode 
+--------------
+ off
+(1 row)
+
+postgres=# SHOW archive_command;
+ archive_command 
+-----------------
+ (disabled)
+(1 row)
+
+postgres=# SELECT pg_current_wal_lsn();
+ pg_current_wal_lsn 
+--------------------
+ 0/F69C5C0
+(1 row)
+
+postgres=# SELECT pg_switch_wal();
+ pg_switch_wal 
+---------------
+ 0/F69C5D8
+(1 row)
+
+postgres=# SELECT pg_create_restore_point('before_data_migration');
+ pg_create_restore_point 
+-------------------------
+ 0/10000090
+(1 row)
+
+postgres=# SELECT rolname, rolreplication
+postgres-# FROM pg_roles
+postgres-# WHERE rolname = 'replication_user';
+     rolname      | rolreplication 
+------------------+----------------
+ replication_user | t
+(1 row)
+
+postgres=# \! pg_basebackup --version
+pg_basebackup (PostgreSQL) 18.6 (Homebrew)
+postgres=# \! pg_archivecleanup --version
+pg_archivecleanup (PostgreSQL) 18.6 (Homebrew)
+postgres=# \! pg_basebackup -h localhost -U replication_user -D ~/pg_basebackup_lab17 -Ft -z -P
+119499/119499 kB (100%), 1/1 tablespace
+postgres=# \! ls -lh ~/pg_basebackup_lab17
+total 33056
+-rw-------  1 azaliaturarbekova  staff   713K Nov  3 22:48 backup_manifest
+-rw-------  1 azaliaturarbekova  staff    15M Nov  3 22:48 base.tar.gz
+-rw-------  1 azaliaturarbekova  staff    17K Nov  3 22:48 pg_wal.tar.gz
+postgres=# \! pg_basebackup -h localhost -U replication_user -D ~/pg_basebackup_lab17_wal -x -P
+pg_basebackup: invalid option -- x
+pg_basebackup: hint: Try "pg_basebackup --help" for more information.
+postgres=# \! pg_basebackup -h localhost -U replication_user -D ~/pg_basebackup_lab17_wal -X fetch -P
+135884/135884 kB (100%), 1/1 tablespace
+postgres=# \! ls -lh ~/pg_basebackup_lab17_wal
+total 1600
+-rw-------   1 azaliaturarbekova  staff     3B Nov  3 22:49 PG_VERSION
+-rw-------   1 azaliaturarbekova  staff   227B Nov  3 22:49 backup_label
+-rw-------   1 azaliaturarbekova  staff   713K Nov  3 22:49 backup_manifest
+drwx------  16 azaliaturarbekova  staff   512B Nov  3 22:49 base
+drwx------  62 azaliaturarbekova  staff   1.9K Nov  3 22:49 global
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_commit_ts
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_dynshmem
+-rw-------   1 azaliaturarbekova  staff   5.6K Nov  3 22:49 pg_hba.conf
+-rw-------   1 azaliaturarbekova  staff   2.6K Nov  3 22:49 pg_ident.conf
+drwx------   5 azaliaturarbekova  staff   160B Nov  3 22:49 pg_logical
+drwx------   4 azaliaturarbekova  staff   128B Nov  3 22:49 pg_multixact
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_notify
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_replslot
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_serial
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_snapshots
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_stat
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_stat_tmp
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_subtrans
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_tblspc
+drwx------   2 azaliaturarbekova  staff    64B Nov  3 22:49 pg_twophase
+drwx------   5 azaliaturarbekova  staff   160B Nov  3 22:49 pg_wal
+drwx------   3 azaliaturarbekova  staff    96B Nov  3 22:49 pg_xact
+-rw-------   1 azaliaturarbekova  staff    88B Nov  3 22:49 postgresql.auto.conf
+-rw-------   1 azaliaturarbekova  staff    32K Nov  3 22:49 postgresql.conf
+-rw-------   1 azaliaturarbekova  staff    27K Nov  3 22:49 postgresql.conf.save
+postgres=# \! pg_dump -h localhost -U azaliaturarbekova -d source_db -Fc > ~/migration.dump
+postgres=# pg_restore -h target_host -U username -d target_db migration.dump
+postgres-# ^C
+postgres=# \c source_db
+You are now connected to database "source_db" as user "azaliaturarbekova".
+source_db=# CREATE PUBLICATION migration_pub FOR ALL TABLES;
+ERROR:  publication "migration_pub" already exists
+source_db=# CREATE SUBSCRIPTION migration_sub
+source_db-# CONNECTION 'host=source_host dbname=source_db user=replication_user'
+source_db-# PUBLICATION migration_pub;
+ERROR:  could not create replication slot "migration_sub": ERROR:  logical decoding requires "wal_level" >= "logical"
+source_db=# CREATE TABLE staging_customers AS SELECT * FROM customers WHERE 1=0;
+SELECT 0
+source_db=# COPY (SELECT * FROM customers LIMIT 10000 OFFSET 0)
+source_db-# TO '/tmp/customers_batch_1.csv' WITH CSV HEADER;
+COPY 2
+source_db=# COPY staging_customers FROM '/tmp/customers_batch_1.csv' WITH CSV HEADER;
+COPY 2
+source_db=# SELECT COUNT(*) FROM customers;
+ count 
+-------
+     2
+(1 row)
+
+source_db=# SELECT pid, usename, application_name, client_addr, state
+source_db-# FROM pg_stat_activity
+source_db-# WHERE application_name = 'pg_dump';
+ pid | usename | application_name | client_addr | state 
+-----+---------+------------------+-------------+-------
+(0 rows)
+
+source_db=# SELECT COUNT(*) FROM target_table;
+ERROR:  relation "target_table" does not exist
+LINE 1: SELECT COUNT(*) FROM target_table;
+                             ^
+source_db=# CREATE TABLE large_table_2023 PARTITION OF large_table
+source_db-# FOR VALUES FROM ('2023-01-01') TO ('2024-01-01');
+CREATE TABLE
+source_db=# pg_dump -h source -U user -d db -t large_table_2023 | psql -h target -U user -d db
+source_db-# ^C
+source_db=# 
