@@ -19,7 +19,7 @@ This repository contains my lab files and screenshots documenting my work for th
 | Lab 14 | Joining Tables |
 | Lab 15 | Advanced Querying |
 | Lab 16 | Transactions and ACID properties |
-| Lab 17 |  Data Import_Export and Backup |
+| Lab 17 |  Data Import_Export and Backup (Both Screenshots and psql+terminal output and code separately)|
 
 
 I, Azalea Turarbekova, agree that I take responsibility for submitting labs on time. In case I fail to submit tasks before the agreed deadline, it will be entirely my responsibility.
